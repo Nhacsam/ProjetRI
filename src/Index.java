@@ -7,9 +7,9 @@ import java.util.Set;
 
 
 /**
- *  Classe gérant l'index des mots clefs pour le moteur de recherche
+ * Classe gérant l'index des mots clefs pour le moteur de recherche
  *  
- *  Implémente des méthodes pour enregistrer, charger, construire, ... l'index
+ * Implémente des méthodes pour enregistrer, charger, construire, ... l'index
  * @author nikkidbz
  *
  */
@@ -51,9 +51,11 @@ public class Index {
 			// Pour chaque fichier dans le dossier
 			File[] files = mainDir.listFiles() ;
 			for (int i = 0; i < files.length; i++ ) {
+				
 				// Si dossier, recursivité
 				if( files[i].isDirectory() )
 					this.constructIndex( files[i].getPath() );
+				
 				// Sinon, on indexe le fichier
 				else
 					addDocumentToIndex(  files[i] );
@@ -64,7 +66,7 @@ public class Index {
 	
 	/**
 	 * Ajoute un document à l'index
-	 * @param fileName
+	 * @param file
 	 */
 	public void addDocumentToIndex( File file ) {
 		Document newDoc = new Document(file) ;
@@ -86,11 +88,11 @@ public class Index {
 		Iterator<String> itr = set.iterator();
 		String w ;
 		
-		// Parcour le vecteur
+		// Parcoure le vecteur
 		while (itr.hasNext()) {
 			w = itr.next();
 			
-			// AJoute à la fin si la ligne existait déjà
+			// Ajoute à la fin si la ligne existait déjà
 			if( m_matrix.containsKey(w) )
 				m_matrix.get(w).addLast( Vector.get(w) );
 			

@@ -3,7 +3,7 @@ import java.util.Hashtable;
 
 
 /**
- * Index ne comprenant qu'un sul Document
+ * Index ne comprenant qu'un seul Document
  * @author nikkidbz
  *
  */
@@ -31,8 +31,10 @@ public class VectorIndex {
 		m_document = document ;
 	}
 	
-	
-	
+	/**
+	 * Ajoute un mot à l'index 
+	 * @param w Mot à ajouter
+	 */
 	public void addWord( String w ){
 		
 		w = w.toLowerCase();
@@ -43,10 +45,6 @@ public class VectorIndex {
 			m_vector.put(w, occ);
 		}
 	}
-	
-	
-	
-	
 	
 	/**
 	 * @return the m_document
@@ -61,7 +59,5 @@ public class VectorIndex {
 	public Hashtable<String, Occurence> getVector() {
 		return m_vector;
 	}
-
-
 	
 }

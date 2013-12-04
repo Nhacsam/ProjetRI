@@ -24,7 +24,7 @@ public class Occurence {
 	
 	
 	/**
-	 * Contructeur 
+	 * Constructeur 
 	 * @param document Document qui contient l'occurence du mot
 	 * @param word  Therme contenu dans le document
 	 */

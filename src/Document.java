@@ -3,7 +3,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-
+/**
+ * Classe enregistrant les informations sur un Document
+ * @author nikkidbz
+ *
+ */
 public class Document {
 	
 	/**
@@ -19,7 +23,8 @@ public class Document {
 	private String m_path ;
 	
 	/**
-	 * longueur du fichier en nombre de mot
+	 * Longueur du fichier en nombre de mot
+	 * @var m_length
 	 */
 	private int m_length ;
 	
@@ -89,7 +94,7 @@ public class Document {
 			reader.close();
 			
 		} catch (IOException e ) {
-			System.out.print("Une erreur est survenue") ;
+			System.err.println("Une erreur est survenue.") ;
 		}
 		
 		return documentIndex;
