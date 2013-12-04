@@ -10,7 +10,9 @@ public class Main {
 	public static void main(String[] args) {
 		
 		Index index = new Index();
-		index.parseTxtFile("data/documents/test");
+		index.constructIndex("data");
+		
+		System.out.println( index ) ;
 	}
 
 }

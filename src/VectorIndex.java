@@ -35,6 +35,7 @@ public class VectorIndex {
 	
 	public void addWord( String w ){
 		
+		w = w.toLowerCase();
 		if( m_vector.containsKey(w) )
 			m_vector.get(w).addOccurence();
 		else {

@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -34,23 +35,41 @@ public class Index {
 	
 	/**
 	 * Ajoute les fichiers contenus dans le dossier à l'index (récursif)
-	 * TODO
 	 * @param String folder Dossier contenant les fichiers à indexer
 	 */
 	public void constructIndex( String folder) {
 		
-		
-		
+		File mainDir = new File( folder );
+		if( !mainDir.exists() ) {
+			System.err.println(	"Dossier "+folder+" inexistant." );
+			return ;
+		} else if( !mainDir.isDirectory() ) {
+			System.err.println( "Le dossier principal n'est pas un dossier." );
+			return ;
+		} else {
+			
+			// Pour chaque fichier dans le dossier
+			File[] files = mainDir.listFiles() ;
+			for (int i = 0; i < files.length; i++ ) {
+				// Si dossier, recursivité
+				if( files[i].isDirectory() )
+					this.constructIndex( files[i].getPath() );
+				// Sinon, on indexe le fichier
+				else
+					addDocumentToIndex(  files[i] );
+			}
+		}
 	}
 	
 	
 	/**
 	 * Ajoute un document à l'index
-	 * TODO
 	 * @param fileName
 	 */
-	public void addDocumentToIndex( String fileName ) {
-		
+	public void addDocumentToIndex( File file ) {
+		Document newDoc = new Document(file) ;
+		VectorIndex documentIndex = newDoc.parseTxtFile() ;
+		mergeVector(documentIndex);
 		
 	}
 	
@@ -83,6 +102,14 @@ public class Index {
 			}
 			
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Index [m_matrix=" + m_matrix + "]";
 	}
 	
 	

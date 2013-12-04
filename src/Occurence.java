@@ -85,5 +85,14 @@ public class Occurence {
 	public void setTf(int m_tf) {
 		this.m_tf = m_tf;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "\n\tOccurence [ \n\t\tm_document=" + m_document + "\n\t, m_word=" + m_word
+				+ "\n\t, m_tf=" + m_tf + "]\n";
+	}
 	
 }
