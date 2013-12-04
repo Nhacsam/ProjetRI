@@ -24,12 +24,6 @@ public class Occurence {
 	
 	
 	/**
-	 * @var m_next Occurence suivante pour la Liste chainée
-	 */
-	private Occurence m_next ;
-	
-	
-	/**
 	 * Contructeur 
 	 * @param document Document qui contient l'occurence du mot
 	 * @param word  Therme contenu dans le document
@@ -37,25 +31,14 @@ public class Occurence {
 	public Occurence (Document document, String word ) {
 		m_document = document ;
 		m_word = word ;
+		m_tf = 1 ;
 	}
 	
 	/**
-	 * Passe à l'élément suivant
-	 * @return Occurence
+	 *  Indique qu'on a trouvé une occurence de plus
 	 */
-	public Occurence next() {
-		return m_next ;
-	}
-	
-	/**
-	 * Insère l'occurence à la suite dans la liste chainée
-	 * @param Occurence next Element à insérer à la suite
-	 * @return Occurence this
-	 */
-	public Occurence insertAfter( Occurence next ) {
-		next.m_next = m_next ;
-		m_next = next ;
-		return this ;
+	public void addOccurence() {
+		m_tf++ ;
 	}
 	
 	

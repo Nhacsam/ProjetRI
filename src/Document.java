@@ -5,10 +5,21 @@ import java.io.IOException;
 
 public class Document {
 	
+	/**
+	 *  Nom DU document
+	 *  @var m_name
+	 */
 	private String m_name ;
 	
+	/**
+	 * Chemin vers le fichier
+	 * @var m_path
+	 */
 	private String m_path ;
 	
+	/**
+	 * longueur du fichier en nombre de mot
+	 */
 	private int m_length ;
 	
 	
@@ -56,6 +67,28 @@ public class Document {
 		}
 		
 		return new Index();
+	}
+
+
+	/**
+	 * @return the m_name
+	 */
+	public String getName() {
+		return m_name;
+	}
+	
+	/**
+	 * @return the m_path
+	 */
+	public String getPath() {
+		return m_path;
+	}
+
+	/**
+	 * @return the m_length
+	 */
+	public int getLength() {
+		return m_length;
 	}
 	
 	
