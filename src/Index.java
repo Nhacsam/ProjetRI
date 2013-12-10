@@ -1,4 +1,10 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -13,9 +19,9 @@ import java.util.Set;
  * @author nikkidbz
  *
  */
-public class Index {
+public class Index implements Serializable{
 	
-	
+	static private final long serialVersionUID = 1L ;
 	/**
 	 *  Table de hashage représentant la matrice 
 	 *  Chaque ligne se récupère grace au mot correspondant
@@ -105,7 +111,79 @@ public class Index {
 			
 		}
 	}
-
+	
+	public void save ( String filename ) {
+		try {
+			
+			// ouverture d'un flux de sortie vers le fichier "personne.serial"
+			FileOutputStream fos = new FileOutputStream(filename);
+	
+			// création d'un "flux objet" avec le flux fichier
+			ObjectOutputStream oos= new ObjectOutputStream(fos);
+			
+			try {
+				// sérialisation : écriture de l'objet dans le flux de sortie
+				oos.writeObject(this); 
+				// on vide le tampon
+				oos.flush();
+			} finally {
+				//fermeture des flux
+				try {
+					oos.close();
+				} finally {
+					fos.close();
+				}
+			}
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+	
+	
+	public void load (String filename) {
+		Index loaded = null ;
+		
+		try {
+			// ouverture d'un flux d'entrée depuis le fichier "personne.serial"
+			FileInputStream fis = new FileInputStream(filename);
+			// création d'un "flux objet" avec le flux fichier
+			ObjectInputStream ois= new ObjectInputStream(fis);
+			try {	
+				// désérialisation : lecture de l'objet depuis le flux d'entrée
+				loaded = (Index) ois.readObject(); 
+			} finally {
+				// on ferme les flux
+				try {
+					ois.close();
+				} finally {
+					fis.close();
+				}
+			}
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		} catch(ClassNotFoundException cnfe) {
+			cnfe.printStackTrace();
+		}
+		
+		m_matrix = loaded.m_matrix ;	
+	}
+	
+	
+	
+	
+	
+	public void test(){
+		System.out.println( m_matrix.get("usually") );
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

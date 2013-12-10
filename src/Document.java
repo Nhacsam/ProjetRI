@@ -2,13 +2,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Classe enregistrant les informations sur un Document
  * @author nikkidbz
  *
  */
-public class Document {
+public class Document implements Serializable {
+	
+	static private final long serialVersionUID = 1L ;
 	
 	/**
 	 *  Nom DU document

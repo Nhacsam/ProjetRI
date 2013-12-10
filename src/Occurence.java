@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 
 /**
  * Elément de la liste chainée de l'index
@@ -5,7 +7,9 @@
  * @author nikkidbz
  *
  */
-public class Occurence {
+public class Occurence implements Serializable {
+	
+	static private final long serialVersionUID = 1L ;
 	
 	/**
 	 * @var m_document qui contient l'occurence du mot
