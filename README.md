@@ -1,4 +1,4 @@
 ProjetRI
 ========
 
-osef
+Projet de recheche d'information
