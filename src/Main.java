@@ -19,9 +19,18 @@ public class Main {
 		index.save( "data/index.bin" );
 		*/
 		FilesHandler f = new FilesHandler ("data/query.txt","");
+		
+		ConfigHandler conf = new ConfigHandler() ;
+		conf.readConfFile("data/conf.ini");
+		
+		
 		System.out.println( Arrays.toString(f.ReadQueries()) );
 		
 		System.out.println( "fini" );
 	}
-
+	
+	
+	
+	
+	
 }
