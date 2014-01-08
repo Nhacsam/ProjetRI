@@ -56,7 +56,21 @@ public class Result {
 		m_tag = tag ;
 	}
 
-
+	/**
+	 * Récupère le nom du fichier (sans le chemin ni l'extension)
+	 * @return the m_filePath
+	 */
+	public String getFileName() {
+		
+		int lastSlash = m_filePath.lastIndexOf( "/" ) ;
+		int lastpoint = m_filePath.lastIndexOf( "." ) ;
+		
+		
+		return m_filePath.substring(lastSlash +1, lastpoint);
+	}
+	
+	
+	
 	/**
 	 * @return the m_filePath
 	 */
