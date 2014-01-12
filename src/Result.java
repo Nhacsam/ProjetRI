@@ -3,7 +3,7 @@
  * Classe stockant un résultat de recherche
  * @author nikkidbz
  */
-public class Result {
+public class Result implements Comparable<Result>{
 	
 	/**
 	 * Nom du fichier résulat
@@ -36,7 +36,7 @@ public class Result {
 	 * Champ facultatif pour l'écriture si le tableau de résulats est trié
 	 * @var m_weight
 	 */
-	private float m_weight = -1 ;
+	private double m_weight = 0 ;
 	
 	/**
 	 * Indique si le poid doit être utilisé
@@ -143,7 +143,7 @@ public class Result {
 	/**
 	 * @return the m_weight
 	 */
-	public float getWeight() {
+	public double getWeight() {
 		return m_weight;
 	}
 
@@ -151,8 +151,15 @@ public class Result {
 	/**
 	 * @param m_weight the m_weight to set
 	 */
-	public void setWeight(float m_weight) {
+	public void setWeight(double m_weight) {
 		this.m_weight = m_weight;
+	}
+	
+	/**
+	 * @param m_weight the m_weight to add
+	 */
+	public void addWeight(double weight) {
+		m_weight += weight;
 	}
 
 
@@ -162,7 +169,16 @@ public class Result {
 	public boolean isWeightToConsider() {
 		return m_weightToConsider;
 	}
-
+	
+	
+	public int compareTo(Result r ) {
+		if( r.getWeight() > m_weight )
+			return 1 ;
+		else if ( r.getWeight() < m_weight )
+			return -1 ;
+	
+		return 0 ;
+	}
 
 	/**
 	 * @param m_weightToConsider the m_weightToConsider to set

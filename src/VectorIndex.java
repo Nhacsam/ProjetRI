@@ -41,7 +41,7 @@ public class VectorIndex {
 		if( m_vector.containsKey(w) )
 			m_vector.get(w).addOccurence();
 		else {
-			Occurence occ = new Occurence(m_document, w) ;
+			Occurence occ = new Occurence(m_document) ;
 			m_vector.put(w, occ);
 		}
 	}

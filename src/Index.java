@@ -51,11 +51,21 @@ public class Index implements Serializable{
 	private String m_indexFilename = "data/index.bin" ;
 	
 	/**
+	 * Id du prochain document à crée
+	 * @var m_docId
+	 */
+	private int m_docId = 0 ;
+	
+	
+	
+	/**
 	 *  Constructeur
 	 */
 	public Index(){
 		m_matrix = new Hashtable<String, LinkedList<Occurence> >();
 	}
+	
+	
 	
 	public Index( Hashtable<String, String > conf ) {
 		m_matrix = new Hashtable<String, LinkedList<Occurence> >();
@@ -78,6 +88,17 @@ public class Index implements Serializable{
 			
 	}
 	
+	/**
+	 * Accède à une ligne de la matrice
+	 * @param keyword Mot clef correspondant à la matrice
+	 * @return Ligne
+	 */
+	public LinkedList<Occurence> get( String keyword ){
+		if( m_matrix.containsKey(keyword))
+			return m_matrix.get(keyword);
+		else
+			return null ;
+	}
 	
 	
 	/**
@@ -116,7 +137,11 @@ public class Index implements Serializable{
 	 * @param file
 	 */
 	public void addDocumentToIndex( File file ) {
-		Document newDoc = new Document(file) ;
+		Document newDoc = new Document(m_docId, file) ;
+		m_docId ++ ;
+		if( m_docId %100 == 0)
+			System.out.print('.');
+		
 		VectorIndex documentIndex = newDoc.parseTxtFile() ;
 		mergeVector(documentIndex);
 		
@@ -226,7 +251,14 @@ public class Index implements Serializable{
 		m_matrix = loaded.m_matrix ;	
 	}
 	
-	
+	/**
+	 * Retourne le nombre de document parsé 
+	 * = id du plus grand + 1
+	 * @return
+	 */
+	public int getNbDoc() {
+		return m_docId +1 ;
+	}
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

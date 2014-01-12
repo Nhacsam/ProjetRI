@@ -34,8 +34,7 @@ public class FilesHandler {
 	 * Nom de l'équipe
 	 * @var m_teamName
 	 */
-	private String m_teamName = "DjambazianHunglerLopViricelle" ; 
-	
+	private String m_teamName = "DjambazianHunglerLopViricelle" ;
 	
 	public FilesHandler (String queriesFile, String resultsFiles ) {
 		m_queriesFile = queriesFile ;

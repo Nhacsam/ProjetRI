@@ -13,6 +13,12 @@ public class Document implements Serializable {
 	
 	static private final long serialVersionUID = 1L ;
 	
+	
+	/**
+	 * Id du document
+	 */
+	private int m_id ;
+	
 	/**
 	 *  Nom DU document
 	 *  @var m_name
@@ -42,7 +48,8 @@ public class Document implements Serializable {
 	 * @var name Nom du fichier
 	 * @var path Chemin relatif vers le fichier
 	 */
-	public Document(String name, String path){
+	public Document(int id, String name, String path){
+		m_id = id ;
 		m_name = name ;
 		m_path = path ;
 	}
@@ -51,7 +58,8 @@ public class Document implements Serializable {
 	 * Constructeur
 	 * @var file Fichier 
 	 */
-	public Document(File file){
+	public Document(int id, File file){
+		m_id = id ;
 		m_name = file.getName() ;
 		m_path = file.getPath() ;
 	}
@@ -122,6 +130,13 @@ public class Document implements Serializable {
 	 */
 	public int getLength() {
 		return m_length;
+	}
+	
+	/**
+	 * @return the m_id
+	 */
+	public int getId() {
+		return m_id;
 	}
 	
 	/* (non-Javadoc)
