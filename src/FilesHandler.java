@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 
 
@@ -15,10 +17,22 @@ import java.util.ArrayList;
  */
 public class FilesHandler {
 	
+	/**
+	 * Fichier source contenant les requêtes
+	 * @var m_queriesFile
+	 */
 	private String m_queriesFile ;
-	private String m_resultsFiles ;
 	
-	//private int m_maxNbResult = 1500 ;
+	/**
+	 * Fichier où enregistrer les résultats de la recherche
+	 * @var m_resultsFiles
+	 */
+	private String m_resultsFiles = "data/results_NomAFormater.txt" ;
+	
+	/**
+	 * Nom de l'équipe
+	 * @var m_teamName
+	 */
 	private String m_teamName = "DjambazianHunglerLopViricelle" ; 
 	
 	
@@ -27,6 +41,68 @@ public class FilesHandler {
 		m_resultsFiles = resultsFiles ;
 	}
 	
+	public FilesHandler (String queriesFile ) {
+		m_queriesFile = queriesFile ;
+	}
+	
+	public FilesHandler ( Hashtable<String, String > config ) {
+		
+		if( config.containsKey("src") )
+			m_queriesFile = config.get("src");
+		
+		if( config.containsKey("team") )
+			m_teamName = config.get("team");
+		
+		if( config.containsKey("target") )
+			m_resultsFiles = config.get("target");
+		
+		else if (config.containsKey("state") && config.containsKey("run") && config.containsKey("method") ) {
+			// Format : NomEquipe_n°etape_n°run_pondération_granularité_paramètres.txt
+			
+			String state = config.get("state");
+			if( state.length() == 0) {
+				state = "00";
+			} else if (state.length() == 1) {
+				state = "0" + state ;
+			} else if ( state.length() > 2) {
+				state = state.charAt(0) +""+ state.charAt(1) ;
+			}
+			
+			String run = config.get("run");
+			if( run.length() == 0) {
+				run = "00";
+			} else if (run.length() == 1) {
+				run = "0" + state ;
+			} else if ( run.length() > 2) {
+				run = run.charAt(0) +""+ run.charAt(1) ;
+			}
+			
+			String method = config.get("method");
+			String gran = ( config.containsKey("xml") && config.get("xml") != "false" ) ? "elements" : "articles" ;
+			
+			String params = "" ;
+			Enumeration<String> keys = config.keys();
+			while( keys.hasMoreElements() ) {
+				String k = keys.nextElement() ;
+				if( k.startsWith(method) ) {
+					params += k.replaceFirst(method, "")+config.get(k);
+				}
+			}
+			if( params == "" )
+				params = "none" ;
+			
+			// Format : NomEquipe_n°etape_n°run_pondération_granularité_paramètres.txt
+			m_resultsFiles = "data/" + m_teamName+"_"+state+"_"+run+"_"+method+"_"+gran+"_"+params+".txt" ;
+		}
+		
+		System.out.println(m_resultsFiles );
+	}
+	
+	
+	/**
+	 * Lit le fichier de requête
+	 * @return Requête parsées
+	 */
 	public Query[] ReadQueries() {
 		
 		BufferedReader file ;
@@ -60,11 +136,20 @@ public class FilesHandler {
 		return queriesArray ;
 	}
 	
-	
+	/**
+	 * Ecrit les résulats des requêtes dans le fichier résultat
+	 * La requête doit ête spécifier dans les obkets résultats
+	 * @param r Tableau de résulats
+	 */
 	public void printResults(Result[] r) {
 		printResults(r, null );
 	}
 	
+	/**
+	 * Ecrit les résulats des requêtes dans le fichier résultat
+	 * @param r Tableau de résulats
+	 * @param q Requête associée aux résultats
+	 */
 	public void printResults(Result[] r, Query q ) {
 			
 		try {

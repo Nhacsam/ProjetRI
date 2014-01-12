@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Hashtable;
 
 
 /**
@@ -18,13 +19,22 @@ public class Main {
 		index.test();
 		index.save( "data/index.bin" );
 		*/
-		FilesHandler f = new FilesHandler ("data/query.txt","");
-		
+
 		ConfigHandler conf = new ConfigHandler() ;
 		conf.readConfFile("data/conf.ini");
+		try {
+			conf.readParams(args);
+		} catch( HelpException e ) {
+			return;
+		}
+		
+		Hashtable<String, String > confHash =  conf.getConfig() ;
+		
+		FilesHandler f = new FilesHandler (confHash);
 		
 		
-		System.out.println( Arrays.toString(f.ReadQueries()) );
+		
+		//System.out.println( Arrays.toString(f.ReadQueries()) );
 		
 		System.out.println( "fini" );
 	}
