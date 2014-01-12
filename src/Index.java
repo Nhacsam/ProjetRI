@@ -33,11 +33,52 @@ public class Index implements Serializable{
 	
 	
 	/**
+	 * Définit si on doit parser les balises xml
+	 * @var m_xml
+	 */
+	private boolean m_xml = false ;
+	
+	/**
+	 * Définit si il faut enregistrer l'index à la fin
+	 * @var m_toSave
+	 */
+	private boolean m_toSave = false ;
+	
+	/**
+	 * Chemin vers la sauvegarde de l'index
+	 * @var m_indexFilename
+	 */
+	private String m_indexFilename = "data/index.bin" ;
+	
+	/**
 	 *  Constructeur
 	 */
 	public Index(){
 		m_matrix = new Hashtable<String, LinkedList<Occurence> >();
 	}
+	
+	public Index( Hashtable<String, String > conf ) {
+		m_matrix = new Hashtable<String, LinkedList<Occurence> >();
+		
+		if ( conf.containsKey("xml") && conf.get("xml") != "false" )
+			m_xml = true ;
+		
+		if ( conf.containsKey("saveIndex") && conf.get("saveIndex") != "false" )
+			m_toSave = true ;
+		
+		if ( conf.containsKey("indexFile") )
+			m_indexFilename =  conf.get("indexFile") ;
+		
+		String documentFolder = ( conf.containsKey("documents") ) ? conf.get("documents") : "data/documents/coll" ;
+		
+		if ( conf.containsKey("loadIndex") && conf.get("loadIndex") != "false" )
+			load( m_indexFilename );
+		else
+			constructIndex( documentFolder );
+			
+	}
+	
+	
 	
 	/**
 	 * Ajoute les fichiers contenus dans le dossier à l'index (récursif)
@@ -112,10 +153,24 @@ public class Index implements Serializable{
 		}
 	}
 	
+	
+	/**
+	 * Enregistre l'index si besoin
+	 */
+	public void close() {
+		if( m_toSave )
+			save( m_indexFilename );
+	}
+	
+	
+	/**
+	 * Enregistre l'index dans le fichier filename
+	 * @param filename Chemin vers le fichier à utiliser
+	 */
 	public void save ( String filename ) {
 		try {
 			
-			// ouverture d'un flux de sortie vers le fichier "personne.serial"
+			// ouverture d'un flux de sortie vers le fichier filename
 			FileOutputStream fos = new FileOutputStream(filename);
 	
 			// création d'un "flux objet" avec le flux fichier
@@ -139,12 +194,15 @@ public class Index implements Serializable{
 		}
 	}
 	
-	
+	/**
+	 * Charge l'index sauvegardé dans le fichier filename
+	 * @param filename Chemin vers le fichier sauvegardé
+	 */
 	public void load (String filename) {
 		Index loaded = null ;
 		
 		try {
-			// ouverture d'un flux d'entrée depuis le fichier "personne.serial"
+			// ouverture d'un flux d'entrée depuis le fichier filename
 			FileInputStream fis = new FileInputStream(filename);
 			// création d'un "flux objet" avec le flux fichier
 			ObjectInputStream ois= new ObjectInputStream(fis);
@@ -167,20 +225,6 @@ public class Index implements Serializable{
 		
 		m_matrix = loaded.m_matrix ;	
 	}
-	
-	
-	
-	
-	
-	public void test(){
-		System.out.println( m_matrix.get("usually") );
-	}
-	
-	
-	
-	
-	
-	
 	
 	
 	

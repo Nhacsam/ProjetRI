@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -94,8 +95,6 @@ public class FilesHandler {
 			// Format : NomEquipe_n°etape_n°run_pondération_granularité_paramètres.txt
 			m_resultsFiles = "data/" + m_teamName+"_"+state+"_"+run+"_"+method+"_"+gran+"_"+params+".txt" ;
 		}
-		
-		System.out.println(m_resultsFiles );
 	}
 	
 	
@@ -135,6 +134,19 @@ public class FilesHandler {
 		queries.toArray( queriesArray );
 		return queriesArray ;
 	}
+	
+	/**
+	 * Crée le fichier de résultat ou le vide si il existait déjà
+	 */
+	public void cleanResultFile() {
+		try {
+			PrintWriter writer = new PrintWriter(m_resultsFiles);
+			writer.print("");
+			writer.close();
+		} catch( FileNotFoundException e) {}
+	}
+	
+	
 	
 	/**
 	 * Ecrit les résulats des requêtes dans le fichier résultat
@@ -178,7 +190,7 @@ public class FilesHandler {
 				if( r[i].getRank() != -1 ) {
 					line += r[i].getRank()+" " ;
 				} else {
-					line += i + " " ;
+					line += (i+1) + " " ;
 				}
 				
 				// Poid

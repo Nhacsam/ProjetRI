@@ -12,14 +12,10 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		/*
-		Index index = new Index();
-		index.constructIndex("data/documents/coll");
-		//index.load( "data/index.bin" );
-		index.test();
-		index.save( "data/index.bin" );
-		*/
-
+		
+		
+		System.out.print( "parsing the configuration ... " );
+		// Parse le fichier de configuration et les paramêtres
 		ConfigHandler conf = new ConfigHandler() ;
 		conf.readConfFile("data/conf.ini");
 		try {
@@ -28,15 +24,48 @@ public class Main {
 			return;
 		}
 		
+		// Récupère la configuration
 		Hashtable<String, String > confHash =  conf.getConfig() ;
 		
-		FilesHandler f = new FilesHandler (confHash);
+		System.out.println( "done." );
+		System.out.print( "creating the index ... " );
 		
+		// Crée l'index de la collection
+		Index index = new Index( confHash );
 		
+		System.out.println( "done." );
 		
-		//System.out.println( Arrays.toString(f.ReadQueries()) );
+		// Si on ne veux pas juste l'index
+		if( ! (confHash.containsKey("indexOnly") && confHash.get("indexOnly") != "false") ) {
+			
+			System.out.print( "loading the query file ... " );
+			
+			// Prépare le gestionnaire de fichier
+			FilesHandler fileHand = new FilesHandler (confHash);
+			fileHand.cleanResultFile();
+			
+			// Récupère les requêtes
+			Query[] queries = fileHand.ReadQueries();
+			
+			System.out.println( "done." );
+			System.out.print( "making the query ... " );
+			
+			// Effectue les recherches et les enregistre
+			SearchEngine engine = new SearchEngine(index, confHash );
+			for (int i =0; i < queries.length; i++ ) {
+				Result[] result = engine.makeQuery( queries[i]) ;
+				fileHand.printResults(result, queries[i]);
+			}
+			
+			System.out.println( "done." );
+		}
 		
-		System.out.println( "fini" );
+		System.out.print( "closing the index ... " );
+		
+		// Ferme l'index et l'enregistre si besoins
+		index.close();
+		
+		System.out.println( "done." );
 	}
 	
 	

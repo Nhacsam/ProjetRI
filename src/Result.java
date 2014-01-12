@@ -65,8 +65,13 @@ public class Result {
 		int lastSlash = m_filePath.lastIndexOf( "/" ) ;
 		int lastpoint = m_filePath.lastIndexOf( "." ) ;
 		
+		String fileName ;
+		if( lastpoint == -1 )
+			fileName = m_filePath.substring(lastSlash +1);	
+		else
+			fileName = m_filePath.substring(lastSlash +1, lastpoint);
 		
-		return m_filePath.substring(lastSlash +1, lastpoint);
+		return fileName ;
 	}
 	
 	

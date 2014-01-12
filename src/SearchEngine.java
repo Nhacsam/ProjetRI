@@ -35,7 +35,10 @@ public class SearchEngine {
 	 * @return Result[] Résultats de la requête
 	 */
 	public Result[] makeQuery( Query q ) {
-		return new Result[0];
+		Result[] testArr = new Result[2] ;
+		testArr[0] = new Result( "file1.xml" );
+		testArr[1] = new Result( "file2" );
+		return testArr;
 	}
 	
 	

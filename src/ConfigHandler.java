@@ -44,6 +44,7 @@ public class ConfigHandler {
 		{ "s", "src", "Fichier source contenant les requêtes." },
 		{ "t", "target", "Fichier de destination pour les résultats." },
 		{ "d", "documents", "Dossier contenant les documents." },
+		{ "I", "indexFile", "Fichier où charger ou enregistrer l'index." },
 		{ "e", "state", "No de l'étape." },
 		{ "r", "run", "No du run." },
 		{ "t", "team", "Nom de l'équipe." },
@@ -57,7 +58,9 @@ public class ConfigHandler {
 		{"state", "01"},
 		{"run", "01"},
 		{"method", "ltn"},
-		{"team", "DjambazianHunglerLopViricelle"}
+		{"team", "DjambazianHunglerLopViricelle"},
+		{"indexFile", "data/index.bin"},
+		{"documents", "data/documents/coll" }
 	};
 	
 	
@@ -65,6 +68,9 @@ public class ConfigHandler {
 	
 	public ConfigHandler() {
 		m_config = new Hashtable<String, String >();
+		for( int i = 0; i < m_defaultValues.length; i++) {
+			m_config.put(m_defaultValues[i][0], m_defaultValues[i][1]);
+		}
 	}
 	
 	/**
