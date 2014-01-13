@@ -248,7 +248,8 @@ public class Index implements Serializable{
 			cnfe.printStackTrace();
 		}
 		
-		m_matrix = loaded.m_matrix ;	
+		m_matrix = loaded.m_matrix ;
+		m_docId = loaded.m_docId ;
 	}
 	
 	/**

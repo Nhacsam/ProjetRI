@@ -43,6 +43,7 @@ public class ConfigHandler {
 	static private String[][] m_affectParams = {
 		{ "s", "src", "Fichier source contenant les requêtes." },
 		{ "t", "target", "Fichier de destination pour les résultats." },
+		{ "n", "nbresult", "Nombre maximum de résultat pour une requête." },
 		{ "d", "documents", "Dossier contenant les documents." },
 		{ "I", "indexFile", "Fichier où charger ou enregistrer l'index." },
 		{ "e", "state", "No de l'étape." },
@@ -60,7 +61,8 @@ public class ConfigHandler {
 		{"method", "ltn"},
 		{"team", "DjambazianHunglerLopViricelle"},
 		{"indexFile", "data/index.bin"},
-		{"documents", "data/documents/coll" }
+		{"documents", "data/documents/coll" },
+		{"nbresult", "1500" }
 	};
 	
 	
