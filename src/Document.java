@@ -110,7 +110,22 @@ public class Document implements Serializable {
 		
 		return documentIndex;
 	}
-
+	
+	/**
+	 * Parse un fichier xml et l'ajoute à l'index
+	 * @param path Nom du fichier à parser (facultatif)
+	 * @return Index du document
+	 */
+	public VectorIndex parseXmlFile (){ return parseXmlFile(m_path); }
+	public VectorIndex parseXmlFile (String path) {
+		
+		// TODO
+		return new VectorIndex( this );
+	}
+	
+	
+	
+	
 	/**
 	 * @return the m_name
 	 */

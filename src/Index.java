@@ -142,7 +142,12 @@ public class Index implements Serializable{
 		if( m_docId %100 == 0)
 			System.out.print('.');
 		
-		VectorIndex documentIndex = newDoc.parseTxtFile() ;
+		VectorIndex documentIndex ;
+		if( m_xml)
+			documentIndex = newDoc.parseTxtFile() ;
+		else
+			documentIndex = newDoc.parseXmlFile() ;
+		
 		mergeVector(documentIndex);
 		
 	}

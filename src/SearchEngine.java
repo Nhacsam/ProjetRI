@@ -36,10 +36,19 @@ public class SearchEngine {
 	 */
 	private int m_nbResultsMax = 1500 ;
 	
+	/**
+	 * Définit si on doit renvoyer des balises xml précises dans les résultats
+	 * @var m_xml
+	 */
+	private boolean m_xml = false ;
+	
 	
 	
 	public SearchEngine( Index index, Hashtable< String, String> params) {
 		m_index = index ;
+		
+		if ( params.containsKey("xml") && params.get("xml") != "false" )
+			m_xml = true ;
 		
 		if( params.containsKey("method") && Arrays.binarySearch(m_autorizedMethods, params.get("method")) >= 0 )
 			m_method = params.get("method") ;
@@ -124,6 +133,9 @@ public class SearchEngine {
 			
 			// Résultat qui va contenir les infos sur le document courant (d'id = min)
 			Result r = null ;
+			// liste des occurences considérés
+			LinkedList<Occurence> OccList = new LinkedList<Occurence>();
+			
 			
 			// Pour chaque mot clef
 			for ( int i=0; i< n; i++) {
@@ -135,6 +147,7 @@ public class SearchEngine {
 				
 				// On note qu'on s'en est servi pour passé au suivant au prochain tour
 				usedLastTime[i] = true ;
+				OccList.addFirst( currentOcc[i] );
 				
 				// Si r = null, on l'inicialise
 				if( r == null ) {
@@ -146,6 +159,10 @@ public class SearchEngine {
 				// Calcul du poid pour le document et ajout 
 				r.addWeight( computeWeight(currentOcc[i],  df[i]) );
 			}
+			
+			if( m_xml )
+				r.setTag( getMostRelevantTag(OccList) );
+			
 			// Ajout du résultat à la liste
 			resultsList.addFirst(r);
 		}
@@ -163,6 +180,19 @@ public class SearchEngine {
 	}
 	
 	
+	/**
+	 * Calcule quelle est la balise la plus pertinente 
+	 * pour le document correspondant aux occurences
+	 * @param occs Liste d'occurences correspondant aux différents mots clef de la requête et au même document
+	 * @return Chaine formatée correspondant à la balise
+	 */
+	private String getMostRelevantTag( LinkedList<Occurence> occs ) {
+		
+		
+		// TODO
+		
+		return "/article[1]" ;
+	}
 	
 	
 	
@@ -204,8 +234,6 @@ public class SearchEngine {
 		w *= Math.log(m_index.getNbDoc() / df );
 		return w ;
 	}
-	
-	
 	
 	
 	
