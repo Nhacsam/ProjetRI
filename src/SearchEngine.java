@@ -121,7 +121,7 @@ public class SearchEngine {
 					continue ;
 				
 				// On cherche les ligne qui en sont au document d'id le plus faible et on les note comme tel.
-				if( currentOcc[i].getDocument().getId() > min ) {
+				if( currentOcc[i].getDocument().getId() < min || min < 0) {
 					min = currentOcc[i].getDocument().getId() ;
 					clearArr( hasMin );
 					hasMin[i] = true ;
