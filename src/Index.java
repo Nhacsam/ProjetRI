@@ -57,6 +57,10 @@ public class Index implements Serializable{
 	private int m_docId = 0 ;
 	
 	
+	/**
+	 * Somme des longueurs de tous les documents
+	 */
+	private double m_lengthSum = 0. ;
 	
 	/**
 	 *  Constructeur
@@ -143,10 +147,12 @@ public class Index implements Serializable{
 			System.out.print('.');
 		
 		VectorIndex documentIndex ;
-		if( m_xml)
+		if( !m_xml)
 			documentIndex = newDoc.parseTxtFile() ;
 		else
 			documentIndex = newDoc.parseXmlFile() ;
+		
+		m_lengthSum += newDoc.getLength() ;
 		
 		mergeVector(documentIndex);
 		
@@ -255,16 +261,26 @@ public class Index implements Serializable{
 		
 		m_matrix = loaded.m_matrix ;
 		m_docId = loaded.m_docId ;
+		m_lengthSum = loaded.m_lengthSum ;
 	}
 	
 	/**
 	 * Retourne le nombre de document parsé 
 	 * = id du plus grand + 1
-	 * @return
+	 * @return Nombre de documents
 	 */
 	public int getNbDoc() {
 		return m_docId +1 ;
 	}
+	
+	/**
+	 * Retourne la taille moyenne des doncuments
+	 * @return Taille moyenne des doncuments
+	 */
+	public double getLave() {
+		return m_lengthSum/ getNbDoc() ;
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

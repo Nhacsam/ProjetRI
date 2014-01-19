@@ -50,7 +50,8 @@ public class ConfigHandler {
 		{ "r", "run", "No du run." },
 		{ "t", "team", "Nom de l'équipe." },
 		{ "m", "method", "Methode de calcul des poids." },
-		{ "A", "bm25a", "Paramètre alpha de bm25" } // Exemple
+		{ "K", "bm25k", "Paramètre k1 de bm25" },
+		{ "B", "bm25b", "Paramètre b de bm25" }
 	};
 	
 	

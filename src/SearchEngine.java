@@ -28,7 +28,7 @@ public class SearchEngine {
 	 * Liste de méthode autorisé pour le calcul des poids
 	 * @var m_autorizedMethods 
 	 */
-	static private String[] m_autorizedMethods = { "ltn" } ;
+	static private String[] m_autorizedMethods = { "ltn", "ltc", "stn", "lfn", "bm25" } ;
 	
 	/**
 	 * Nombre maximum de résultats
@@ -43,6 +43,15 @@ public class SearchEngine {
 	private boolean m_xml = false ;
 	
 	
+	/**
+	 * Paramètre de bm25
+	 * @var bm25k1
+	 * @var bm25b
+	 */
+	private double m_bm25k1 = 0.;
+	private double m_bm25b = 0.;
+	
+	
 	
 	public SearchEngine( Index index, Hashtable< String, String> params) {
 		m_index = index ;
@@ -50,11 +59,19 @@ public class SearchEngine {
 		if ( params.containsKey("xml") && params.get("xml") != "false" )
 			m_xml = true ;
 		
-		if( params.containsKey("method") && Arrays.binarySearch(m_autorizedMethods, params.get("method")) >= 0 )
+		if( params.containsKey("method") && Arrays.asList(m_autorizedMethods).contains(params.get("method")) )
 			m_method = params.get("method") ;
 		
 		if( params.containsKey("nbresult") ) {
 			m_nbResultsMax =  Integer.parseInt(params.get("nbresult")) ;
+		}
+		
+		if( params.containsKey("bm25k") ) {
+			m_bm25k1 =  Double.parseDouble(params.get("bm25k")) ;
+		}
+		
+		if( params.containsKey("bm25b") ) {
+			m_bm25b =  Double.parseDouble(params.get("bm25b")) ;
 		}
 		
 	}
@@ -136,6 +153,8 @@ public class SearchEngine {
 			// liste des occurences considérés
 			LinkedList<Occurence> OccList = new LinkedList<Occurence>();
 			
+			// Liste des poids tels que ajouté
+			LinkedList< Double > WeightList = new LinkedList< Double>();
 			
 			// Pour chaque mot clef
 			for ( int i=0; i< n; i++) {
@@ -157,8 +176,12 @@ public class SearchEngine {
 				}
 				
 				// Calcul du poid pour le document et ajout 
-				r.addWeight( computeWeight(currentOcc[i],  df[i]) );
+				double w = computeWeight(currentOcc[i],  df[i]) ;
+				WeightList.addFirst(w);
+				r.addWeight(w);
 			}
+			
+			r.setWeight( normalizeWeight( r.getWeight(), WeightList ) );
 			
 			if( m_xml )
 				r.setTag( getMostRelevantTag(OccList) );
@@ -215,30 +238,116 @@ public class SearchEngine {
 		switch (m_method) {
 		
 			case "ltn" :
-				return ltnWeight(o, df) ;
+			case "ltc" : 
+				return ltWeight(o, df) ;
+			
+			case "stn" :
+				return stWeight(o, df) ;
+			
+			case "lfn" :
+				return lfWeight(o, df) ;
+			
+			case "bm25" :
+				return bm25Weight(o, df) ;
 		
 			default :
 				throw new InvalidParameterException("method");
 		}
 	}
 	
+	/**
+	 * Normalise le calcul du poid
+	 * @param w	Somme des poids précédement calculé
+	 * @param wList Liste des poids qui ont permit de calculer la somme
+	 * @return Poid Calculé
+	 */
+	public double  normalizeWeight( double w, LinkedList< Double >  wList ) {
+		
+		switch (m_method) {
+		
+		case "ltc" :
+			return cNorm(w, wList) ;
+	
+		default :
+			return w ;
+	}
+	}
 	
 	/**
-	 * Calcul du poid d'un terme dans le document - Methode ltn
+	 * Calcul du poid d'un terme dans le document - Methode ltn ou ltc
 	 * @param o	Occurence du terme
 	 * @param df Document frequency du terme
 	 * @return Poid Calculé
 	 */
-	public double ltnWeight( Occurence o, int df ) {
+	public double ltWeight( Occurence o, int df ) {
 		double w = 1 + Math.log( o.getTf() ) ;
 		w *= Math.log(m_index.getNbDoc() / df );
 		return w ;
 	}
 	
+	/**
+	 * Normalisation du poid d'un terme dans le document - Methode ltc
+	 * @param w	Somme des poids précédement calculé
+	 * @param wList Liste des poids qui ont permit de calculer la somme
+	 * @return Poid Calculé
+	 */
+	public double cNorm( double w, LinkedList< Double >  wList ) {
+		
+		if( w == 0 )
+			return 0. ;
+		
+		double squareSum = 0. ;
+		
+		ListIterator<Double> ite =  wList.listIterator(0);
+		while ( ite.hasNext() ) {
+			double wi = ite.next();
+			squareSum += wi*wi ;
+		}
+		
+		return w/Math.sqrt(squareSum) ;
+	}
 	
 	
+	/**
+	 * Calcul du poid d'un terme dans le document - Methode stn
+	 * @param o	Occurence du terme
+	 * @param df Document frequency du terme
+	 * @return Poid Calculé
+	 */
+	public double stWeight( Occurence o, int df ) {
+		double w = o.getTf() * o.getTf() ;
+		w *= Math.log(m_index.getNbDoc() / df );
+		return w ;
+	}
 	
+	/**
+	 * Calcul du poid d'un terme dans le document - Methode lfn
+	 * @param o	Occurence du terme
+	 * @param df Document frequency du terme
+	 * @return Poid Calculé
+	 */
+	public double lfWeight( Occurence o, int df ) {
+		double w = 1 + Math.log( o.getTf() ) ;
+		w /=  df ;
+		return w ;
+	}
 	
+	/**
+	 * Calcul du poid d'un terme dans le document - Methode bm25
+	 * @param o	Occurence du terme
+	 * @param df Document frequency du terme
+	 * @return Poid Calculé
+	 */
+	public double bm25Weight( Occurence o, int df ) {
+		
+		int Ld = o.getDocument().getLength() ;
+		double Lave = m_index.getLave() ;
+		
+		double w = Math.log( m_index.getNbDoc() / df ) ;
+		w *=  o.getTf()*( m_bm25k1 + 1) ;
+		w /= o.getTf() + m_bm25k1*(1- m_bm25b+m_bm25k1*( Ld /Lave ) );
+		return w ;
+	}
 	
 	
 	
