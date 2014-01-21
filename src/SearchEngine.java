@@ -177,8 +177,10 @@ public class SearchEngine {
 				
 				// Calcul du poid pour le document et ajout 
 				double w = computeWeight(currentOcc[i],  df[i]) ;
-				WeightList.addFirst(w);
-				r.addWeight(w);
+				int[] keyW = q.getKeywordsWeight() ;
+				
+				WeightList.addFirst(w * keyW[i]);
+				r.addWeight(w * keyW[i]);
 			}
 			
 			r.setWeight( normalizeWeight( r.getWeight(), WeightList ) );
@@ -360,7 +362,7 @@ public class SearchEngine {
 	 * @param l Tableau des itérateurs
 	 * @return true Si un des itérateur n'est pas finit
 	 */
-	private boolean OneHasNext( ListIterator[] l ) {
+	private boolean OneHasNext( ListIterator<?>[] l ) {
 		for (int i =0; i < l.length ; i++) {
 			if ( l[i] != null && l[i].hasNext() )
 				return true ;

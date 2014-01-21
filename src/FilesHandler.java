@@ -101,7 +101,7 @@ public class FilesHandler {
 	 * Lit le fichier de requête
 	 * @return Requête parsées
 	 */
-	public Query[] ReadQueries() {
+	public Query[] ReadQueries( Hashtable<String, String > config ) {
 		
 		BufferedReader file ;
 		ArrayList<Query> queries = new ArrayList<Query>();
@@ -117,7 +117,7 @@ public class FilesHandler {
 					String[] queryLine = line.split(" ");
 					String[] keywords = new String[ queryLine.length -1 ];
 					System.arraycopy(queryLine, 1, keywords, 0, queryLine.length -1);
-					queries.add( new Query( keywords, queryLine[0] ) );
+					queries.add( new Query( config, keywords, queryLine[0] ) );
 					
 				}
 			

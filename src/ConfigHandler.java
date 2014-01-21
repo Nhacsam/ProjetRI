@@ -50,6 +50,7 @@ public class ConfigHandler {
 		{ "r", "run", "No du run." },
 		{ "t", "team", "Nom de l'équipe." },
 		{ "m", "method", "Methode de calcul des poids." },
+		{ "b", "keybonus", "Bonus à associer aux éléments de la requête commençant par un +." },
 		{ "K", "bm25k", "Paramètre k1 de bm25" },
 		{ "B", "bm25b", "Paramètre b de bm25" }
 	};
@@ -63,7 +64,8 @@ public class ConfigHandler {
 		{"team", "DjambazianHunglerLopViricelle"},
 		{"indexFile", "data/index.bin"},
 		{"documents", "data/documents/coll" },
-		{"nbresult", "1500" }
+		{"nbresult", "1500" },
+		{"keybonus", "2" }
 	};
 	
 	
@@ -107,9 +109,6 @@ public class ConfigHandler {
 	 * @throws HelpException
 	 */
 	public void readParams(String[] args) throws HelpException{
-		
-		boolean srcFound = false ;
-		boolean destFound = false ;
 		
 		Options options = new Options();
 		

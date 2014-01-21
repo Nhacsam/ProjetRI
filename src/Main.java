@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Hashtable;
 
 
@@ -45,7 +44,7 @@ public class Main {
 			fileHand.cleanResultFile();
 			
 			// Récupère les requêtes
-			Query[] queries = fileHand.ReadQueries();
+			Query[] queries = fileHand.ReadQueries(confHash);
 			
 			System.out.println( "done." );
 			System.out.print( "making the query ... " );
