@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.LinkedList;
 
 
 /**
@@ -23,20 +24,49 @@ public class Occurence implements Serializable {
 	
 	
 	/**
+	 * Balises dans lesquelles sont contenue les mots 
+	 */
+	private LinkedList<DOMElement> m_tag ;
+	
+	/**
 	 * Constructeur 
 	 * @param document Document qui contient l'occurence du mot
-	 * @param word  Therme contenu dans le document
 	 */
 	public Occurence (Document document) {
 		m_document = document ;
 		m_tf = 1 ;
+		
+		m_tag = new LinkedList<DOMElement>() ;
+	}
+	
+	/**
+	 * Constructeur 
+	 * @param document Document qui contient l'occurence du mot
+	 * @param tag Balise dans laquelle est contenue le premier mot
+	 */
+	public Occurence (Document document, DOMElement tag) {
+		m_document = document ;
+		m_tf = 1 ;
+		
+		m_tag = new LinkedList<DOMElement>() ;
+		m_tag.add(tag) ;
 	}
 	
 	/**
 	 *  Indique qu'on a trouvé une occurence de plus
+	 * @param tag Balise dans laquelle est contenue le mot
 	 */
 	public void addOccurence() {
 		m_tf++ ;
+	}
+	
+
+	/**
+	 *  Indique qu'on a trouvé une occurence de plus
+	 */
+	public void addOccurence( DOMElement tag) {
+		m_tf++ ;
+		m_tag.add(tag) ;
 	}
 	
 	

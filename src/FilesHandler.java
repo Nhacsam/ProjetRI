@@ -88,6 +88,10 @@ public class FilesHandler {
 					params += k.replaceFirst(method, "")+config.get(k);
 				}
 			}
+			if( config.containsKey("racin") && config.get("racin") != "false" )
+				params += "racin";
+			
+			
 			if( params == "" )
 				params = "none" ;
 			

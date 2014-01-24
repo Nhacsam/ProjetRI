@@ -50,6 +50,25 @@ public class VectorIndex {
 	}
 	
 	/**
+	 * Ajoute un mot à l'index avec sa balise associée
+	 * @param w Mot à ajouter
+	 * @param d Balise dans laquel est contenue le mot (adresse complète)
+	 * @param stem Si il faut racinimiser le mot
+	 */
+	public void addWord( String w, DOMElement d, boolean stem ){
+		
+		w = w.toLowerCase();
+		if( stem )
+			w = SearchEngine.racinisation( w ) ;
+		if( m_vector.containsKey(w) )
+			m_vector.get(w).addOccurence( d );
+		else {
+			Occurence occ = new Occurence(m_document, d) ;
+			m_vector.put(w, occ);
+		}
+	}
+	
+	/**
 	 * @return the m_document
 	 */
 	public Document getDocument() {
