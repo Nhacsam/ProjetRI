@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 
 /**
@@ -34,6 +35,25 @@ public class Tag {
 		this.name = name ;
 		this.num = num ;
 		children = new  LinkedList<Tag>();
+	}
+	
+	/**
+	 * Cherche dans les balises inclues les balises de même nom
+	 * @param name Nom des balises à chercher
+	 * @return Le numéro le plus élevé des balises trouvées. 0 sinon
+	 */
+	public int searchInChildren( String sname ) {
+		int snum = 0 ;
+		
+		ListIterator<Tag> ite = children.listIterator(0);
+		
+		while( ite.hasNext() ) {
+			Tag t = ite.next() ;
+			if( t.name == sname && t.num > snum )
+				snum = t.num ;
+		}
+		
+		return snum ;
 	}
 	
 }
