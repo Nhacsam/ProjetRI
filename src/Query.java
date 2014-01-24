@@ -31,11 +31,20 @@ public class Query {
 	 */
 	private int m_bonus = 2;
 	
+	/**
+	 * Racinisation des mots ?
+	 * @var m_stem
+	 */
+	private boolean m_stem = false ;
+	
 	public Query(){}
 	public Query(Hashtable<String, String > conf, String[] m_keywords, String m_queryCode) {
 		super();
 		if ( conf.containsKey("keybonus") )
 			m_bonus = Integer.parseInt(conf.get("keybonus")) ;
+		
+		if ( conf.containsKey("racin") && conf.get("racin") != "false" )
+			m_stem = true ;
 		
 		setKeywords( m_keywords ) ;
 		setQueryCode(m_queryCode ) ;
@@ -63,13 +72,10 @@ public class Query {
 			} else {
 				m_keywordsWeight[i] = 1 ;
 			}
+			
+			if( m_stem )
+				m_keywords[i] = SearchEngine.racinisation(m_keywords[i]);
 		}
-		for ( int i =0; i < m_keywordsWeight.length; i++)
-			System.out.print( m_keywords[i] + " " );
-		System.out.println("");
-		for ( int i =0; i < m_keywordsWeight.length; i++)
-			System.out.print( m_keywordsWeight[i] + " " );
-		System.out.println("");
 	}
 	
 	public int[] getKeywordsWeight () {

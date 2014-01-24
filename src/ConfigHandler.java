@@ -33,7 +33,8 @@ public class ConfigHandler {
 		{ "l", "loadIndex", "Charge l'index en mémoire plutôt que de le reconstruire." },
 		{ "s", "saveIndex", "Enregistre l'index après sa constuction eventuelle."},
 		{ "x", "xml", "Fait la recherche en prenant compte des balises xml." },
-		{ "h", "help", "Affiche l'aide." }
+		{ "h", "help", "Affiche l'aide." },
+		{ "R", "racin", "Racinisation de l'index et de la recherche." }
 	};
 	
 	/**
@@ -46,6 +47,7 @@ public class ConfigHandler {
 		{ "n", "nbresult", "Nombre maximum de résultat pour une requête." },
 		{ "d", "documents", "Dossier contenant les documents." },
 		{ "I", "indexFile", "Fichier où charger ou enregistrer l'index." },
+		{ "c", "indexFileRac", "Fichier où charger ou enregistrer l'index racinisé (défaut = indexFile)." },
 		{ "e", "state", "No de l'étape." },
 		{ "r", "run", "No du run." },
 		{ "t", "team", "Nom de l'équipe." },
@@ -143,6 +145,10 @@ public class ConfigHandler {
 		} catch( ParseException e ){
 			e.printStackTrace();
 		}
+		
+		if ( ! m_config.containsKey("indexFileRac") )
+			m_config.put("indexFileRac", m_config.get("indexFile") );
+		
 		
 	}
 	

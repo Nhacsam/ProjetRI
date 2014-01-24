@@ -37,6 +37,11 @@ public class Document implements Serializable {
 	 */
 	private int m_length ;
 	
+	/**
+	 * Si il faut raciniser les mots
+	 * @var m_stem
+	 */
+	private boolean m_stem = false;
 	
 	/**
 	 * Constructeur par défaut (à éviter)
@@ -99,7 +104,7 @@ public class Document implements Serializable {
 				
 				// Ajout des mots dans l'index
 				for( int i=0; i < words.length; i++)
-					documentIndex.addWord(words[i]) ;
+					documentIndex.addWord(words[i], m_stem) ;
 				
 			}
 			reader.close();
@@ -124,7 +129,12 @@ public class Document implements Serializable {
 	}
 	
 	
-	
+	/**
+	 * Set racinination
+	 */
+	public void setStem( boolean stem ) {
+		m_stem = stem ;
+	}
 	
 	/**
 	 * @return the m_name

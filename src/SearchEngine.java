@@ -381,4 +381,72 @@ public class SearchEngine {
 	}
 	
 	
+	/**
+	 * Calcule la racinisation d'un mot
+	 * @param s Mot à raciniser
+	 * @return Mot Racinisé
+	 */
+	static String racinisation( String s) {
+		
+		Stemmer stem = new Stemmer();
+		stem.add(s.toCharArray(), s.length() );
+		stem.stem();
+		return stem.toString();
+		
+		/*
+		Acienne version fait main. Incomplète !
+		String r =  s ;
+		
+		if ( r.endsWith( "sses" ) )
+			r = r.substring(0, r.length() -2 );
+		else if ( r.endsWith( "ies" ) )
+			r = r.substring(0, r.length() -2 );
+		else if ( r.endsWith( "s" ) && !r.endsWith( "ss" ) )
+			r = r.substring(0, r.length() -1 );
+		else if ( r.matches("^(.+)?[aeiou].+eed$") )
+			r = r.substring(0, r.length() -1 );
+		else if ( r.matches("^(.+)?[aeiou].+ed$") )
+			r = r.substring(0, r.length() -2 );
+		else if ( r.matches("^(.+)?[aeiou].+ing$") )
+			r = r.substring(0, r.length() -3 );
+		else if ( r.matches("^(.+)?[aeiou].+y$"))
+			r = r.substring(0, r.length() -1 ) + 'i';
+		
+		if( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+)+ational$") )
+			r = r.substring(0, r.length() -5) + "ate";
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+)+tional$") )
+			r = r.substring(0, r.length() -2) ;
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+)+enci$") )
+			r = r.substring(0, r.length() -1) + "e";
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+)+anci$") )
+			r = r.substring(0, r.length() -1) + "e";
+		
+		if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+)+icate$") )
+			r = r.substring(0, r.length() -3) ;
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+)+ative$") )
+			r = r.substring(0, r.length() -5) ;
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+)+alize$") )
+			r = r.substring(0, r.length() -3) ;
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+)+iciti$") )
+			r = r.substring(0, r.length() -3) ;
+		
+		if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+){2,}al$") )
+			r = r.substring(0, r.length() -2) ;
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+){2,}ance$") )
+			r = r.substring(0, r.length() -4) ;
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+){2,}ence$") )
+			r = r.substring(0, r.length() -4) ;
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+){2,}er$") )
+			r = r.substring(0, r.length() -2) ;
+		
+		if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+){2,}$") )
+			r = r.substring(0, r.length() -1) ;
+		else if ( r.matches("^([^aeiou]+)?([aeiou]+[^aeiou]+)+([aeiou]+[^aeiouwxy]+)[^aeiou].\\1$") )
+			r = r.substring(0, r.length() -1) ;
+		
+		return r ;*/
+	}
+	
+	
+	
 }

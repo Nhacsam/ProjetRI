@@ -50,6 +50,13 @@ public class Index implements Serializable{
 	 */
 	private String m_indexFilename = "data/index.bin" ;
 	
+	
+	/**
+	 * racinisation ?
+	 * @var m_stem
+	 */
+	private boolean m_stem ;
+	
 	/**
 	 * Id du prochain document à crée
 	 * @var m_docId
@@ -80,8 +87,13 @@ public class Index implements Serializable{
 		if ( conf.containsKey("saveIndex") && conf.get("saveIndex") != "false" )
 			m_toSave = true ;
 		
-		if ( conf.containsKey("indexFile") )
+		if ( conf.containsKey("racin") && conf.get("racin") != "false" )
+			m_stem = true ;
+		
+		if ( conf.containsKey("indexFile") && !m_stem)
 			m_indexFilename =  conf.get("indexFile") ;
+		else if ( conf.containsKey("indexFileRac") && m_stem)
+			m_indexFilename =  conf.get("indexFileRac") ;
 		
 		String documentFolder = ( conf.containsKey("documents") ) ? conf.get("documents") : "data/documents/coll" ;
 		
@@ -145,6 +157,8 @@ public class Index implements Serializable{
 		m_docId ++ ;
 		if( m_docId %100 == 0)
 			System.out.print('.');
+		
+		newDoc.setStem(m_stem);
 		
 		VectorIndex documentIndex ;
 		if( !m_xml)

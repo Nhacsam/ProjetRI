@@ -12,7 +12,6 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		
-		
 		System.out.print( "parsing the configuration ... " );
 		// Parse le fichier de configuration et les paramêtres
 		ConfigHandler conf = new ConfigHandler() ;

@@ -34,10 +34,13 @@ public class VectorIndex {
 	/**
 	 * Ajoute un mot à l'index 
 	 * @param w Mot à ajouter
+	 * @param stem Si il faut racinimiser le mot
 	 */
-	public void addWord( String w ){
+	public void addWord( String w, boolean stem ){
 		
 		w = w.toLowerCase();
+		if( stem )
+			w = SearchEngine.racinisation( w ) ;
 		if( m_vector.containsKey(w) )
 			m_vector.get(w).addOccurence();
 		else {
