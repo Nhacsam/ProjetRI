@@ -179,12 +179,7 @@ public class XmlParser  implements ContentHandler {
 	 */
 	public void characters(char[] ch, int start, int end) throws SAXException {
 		
-		if( end - start > 0 )
-			System.out.println("#PCDATA >0 : " + new String(ch, start, end));
-		if( end - start == 0 )
-			System.out.println("#PCDATA =0 : " + new String(ch, start, end));
-		if( end - start < 0 )
-			System.out.println("#PCDATA <0 : " + new String(ch, start, end));
+		System.out.println("#PCDATA <0 : " + new String(ch, start, end));
 		
 		// Conversion en String (voir exemple)
 		

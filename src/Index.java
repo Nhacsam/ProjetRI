@@ -155,6 +155,10 @@ public class Index implements Serializable{
 					addDocumentToIndex(  files[i] );
 			}
 		}
+		
+		System.out.println( m_tagsUsed.size() ) ;
+		System.out.println( m_tagsUsed.size() ) ;
+		System.out.println( m_tagsUsed.size() ) ;
 	}
 	
 	
