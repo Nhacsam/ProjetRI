@@ -3,6 +3,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Hashtable;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.XMLReader;
 
 /**
  * Classe enregistrant les informations sur un Document
@@ -121,11 +127,27 @@ public class Document implements Serializable {
 	 * @param path Nom du fichier à parser (facultatif)
 	 * @return Index du document
 	 */
-	public VectorIndex parseXmlFile (){ return parseXmlFile(m_path); }
-	public VectorIndex parseXmlFile (String path) {
+	public VectorIndex parseXmlFile (Hashtable<String, DOMElement> usedElement){ return parseXmlFile(m_path, usedElement); }
+	public VectorIndex parseXmlFile (String path, Hashtable<String, DOMElement> usedElement) {
 		
-		// TODO
-		return new VectorIndex( this );
+		VectorIndex index = new VectorIndex( this );
+		XmlParser parser = new XmlParser( index, usedElement, m_stem ) ;
+		
+		
+		try {
+			SAXParserFactory spf = SAXParserFactory.newInstance(); 
+			SAXParser sp = spf.newSAXParser(); 
+			XMLReader saxReader = sp.getXMLReader(); 
+	        saxReader.setContentHandler( parser );
+	        saxReader.parse(path);
+	        
+	        
+		} catch (Exception e ) {
+			e.printStackTrace() ;
+			return new VectorIndex( this );
+			
+		}
+		return index ;
 	}
 	
 	

@@ -39,6 +39,13 @@ public class Index implements Serializable{
 	private boolean m_xml = false ;
 	
 	/**
+	 * Liste des balises rencotrée (chemin y compris=
+	 * xml only
+	 */
+	Hashtable<String, DOMElement> m_tagsUsed ;
+	
+	
+	/**
 	 * Définit si il faut enregistrer l'index à la fin
 	 * @var m_toSave
 	 */
@@ -81,8 +88,11 @@ public class Index implements Serializable{
 	public Index( Hashtable<String, String > conf ) {
 		m_matrix = new Hashtable<String, LinkedList<Occurence> >();
 		
-		if ( conf.containsKey("xml") && conf.get("xml") != "false" )
+		if ( conf.containsKey("xml") && conf.get("xml") != "false" ) {
 			m_xml = true ;
+			m_tagsUsed = new Hashtable<String, DOMElement>() ;
+		}
+			
 		
 		if ( conf.containsKey("saveIndex") && conf.get("saveIndex") != "false" )
 			m_toSave = true ;
@@ -164,7 +174,7 @@ public class Index implements Serializable{
 		if( !m_xml)
 			documentIndex = newDoc.parseTxtFile() ;
 		else
-			documentIndex = newDoc.parseXmlFile() ;
+			documentIndex = newDoc.parseXmlFile( m_tagsUsed ) ;
 		
 		m_lengthSum += newDoc.getLength() ;
 		

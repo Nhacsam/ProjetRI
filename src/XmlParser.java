@@ -88,7 +88,7 @@ public class XmlParser  implements ContentHandler {
 		
 		// Code d'exemple
 		System.out.println("Ouverture de la balise : " + localName);
-
+		System.out.println("Ouverture de la balise : " + rawName);
 		if ( ! "".equals(nameSpaceURI)) { // espace de nommage particulier
 			System.out.println("  appartenant a l'espace de nom : "  + nameSpaceURI);
 		}
@@ -98,6 +98,7 @@ public class XmlParser  implements ContentHandler {
 		for (int index = 0; index < attributs.getLength(); index++) { // on parcourt la liste des attributs
 			System.out.println(" - " +  attributs.getLocalName(index) + " = " + attributs.getValue(index));
 		}
+		
 		
 		
 		
@@ -117,6 +118,7 @@ public class XmlParser  implements ContentHandler {
 			// SInon création et ajout dans la hashtable
 		// voir le constructeur. On peut sauter cette etape si la balise n'est pas pertinente (voir plus bas)
 		
+		// AU pasage, je pense que tu peux ignorer le contenu de la balise <math> (c'est du LaTeX)
 		
 		// Pour ne retenir que les balises pertinentes
 		// tu peux t'arreter à la dernière balise pertinente quand tu cherche dans la hashtable
@@ -177,11 +179,17 @@ public class XmlParser  implements ContentHandler {
 	 * @see org.xml.sax.ContentHandler#characters(char[], int, int)
 	 */
 	public void characters(char[] ch, int start, int end) throws SAXException {
-		System.out.println("#PCDATA : " + new String(ch, start, end));
+		
+		if( end - start > 0 )
+			System.out.println("#PCDATA >0 : " + new String(ch, start, end));
+		if( end - start == 0 )
+			System.out.println("#PCDATA =0 : " + new String(ch, start, end));
+		if( end - start < 0 )
+			System.out.println("#PCDATA <0 : " + new String(ch, start, end));
 		
 		// Conversion en String (voir exemple)
 		
-		// Séparation en mot
+		// Séparation en mot (Attention aux \n \t \r ... )
 		
 		// Ajout des mots dans le vectorIndex
 		
