@@ -44,6 +44,11 @@ public class Document implements Serializable {
 	private int m_length ;
 	
 	/**
+	 * Nombre de lien vers le fichier
+	 */
+	private int m_links ;
+	
+	/**
 	 * Si il faut raciniser les mots
 	 * @var m_stem
 	 */
@@ -125,13 +130,17 @@ public class Document implements Serializable {
 	/**
 	 * Parse un fichier xml et l'ajoute à l'index
 	 * @param path Nom du fichier à parser (facultatif)
+	 * @param usedElement Liste des éléments déjà utilisé
+	 * @param docs Liste des documents de la collection
 	 * @return Index du document
 	 */
-	public VectorIndex parseXmlFile (Hashtable<String, DOMElement> usedElement){ return parseXmlFile(m_path, usedElement); }
-	public VectorIndex parseXmlFile (String path, Hashtable<String, DOMElement> usedElement) {
+	public VectorIndex parseXmlFile (Hashtable<String, DOMElement> usedElement, Hashtable<String, Document> docs)
+	{ return parseXmlFile(m_path, usedElement, docs); }
+	
+	public VectorIndex parseXmlFile (String path, Hashtable<String, DOMElement> usedElement, Hashtable<String, Document> docs) {
 		
 		VectorIndex index = new VectorIndex( this );
-		XmlParser parser = new XmlParser( index, usedElement, m_stem ) ;
+		XmlParser parser = new XmlParser( index, usedElement, docs , m_stem ) ;
 		
 		
 		try {
@@ -156,6 +165,20 @@ public class Document implements Serializable {
 	 */
 	public void setStem( boolean stem ) {
 		m_stem = stem ;
+	}
+	
+	/**
+	 * Increment le nombre de lien vers le document
+	 */
+	public void addLinks() {
+		m_links++ ;
+	}
+	
+	/**
+	 * get nombre de lien
+	 */
+	public int getLinks() {
+		return m_links ;
 	}
 	
 	/**

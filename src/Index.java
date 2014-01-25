@@ -77,6 +77,18 @@ public class Index implements Serializable{
 	private double m_lengthSum = 0. ;
 	
 	/**
+	 * Liste de tous les documents (construit uniquement si on construit l'index manuellement)
+	 */
+	private Hashtable<String, Document> m_docs = null ;
+	
+	/**
+	 * Si on doit prendre en compte les liens dans les documents
+	 * xml only
+	 */
+	private boolean m_usedLinks = true ;
+	
+	
+	/**
 	 *  Constructeur
 	 */
 	public Index(){
@@ -144,6 +156,17 @@ public class Index implements Serializable{
 			
 			// Pour chaque fichier dans le dossier
 			File[] files = mainDir.listFiles() ;
+			
+			// on rempli la liste des document (ne supporte pas la récursivité)
+			if( m_usedLinks && m_xml && m_docs == null) {
+				m_docs = new Hashtable<String, Document>() ;
+				for (int i = 0; i < files.length; i++ ) {
+					Document newDoc = new Document(m_docId, files[i]) ;
+					m_docId ++ ;
+					m_docs.put( files[i].getName(), newDoc );
+				}
+			}
+			
 			for (int i = 0; i < files.length; i++ ) {
 				
 				// Si dossier, recursivité
@@ -155,10 +178,6 @@ public class Index implements Serializable{
 					addDocumentToIndex(  files[i] );
 			}
 		}
-		
-		System.out.println( m_tagsUsed.size() ) ;
-		System.out.println( m_tagsUsed.size() ) ;
-		System.out.println( m_tagsUsed.size() ) ;
 	}
 	
 	
@@ -167,9 +186,19 @@ public class Index implements Serializable{
 	 * @param file
 	 */
 	public void addDocumentToIndex( File file ) {
-		Document newDoc = new Document(m_docId, file) ;
-		m_docId ++ ;
-		if( m_docId %100 == 0)
+		
+		Document newDoc ;
+		
+		if( m_docs.containsKey(file.getName())  )
+			newDoc = m_docs.get(file.getName()) ;
+		else {
+			newDoc = new Document(m_docId, file) ;
+			m_docId ++ ;
+			m_docs.put( file.getName(), newDoc );
+		}
+		
+		
+		if( newDoc.getId() %100 == 0)
 			System.out.print('.');
 		
 		newDoc.setStem(m_stem);
@@ -178,7 +207,7 @@ public class Index implements Serializable{
 		if( !m_xml)
 			documentIndex = newDoc.parseTxtFile() ;
 		else
-			documentIndex = newDoc.parseXmlFile( m_tagsUsed ) ;
+			documentIndex = newDoc.parseXmlFile( m_tagsUsed, m_docs ) ;
 		
 		m_lengthSum += newDoc.getLength() ;
 		

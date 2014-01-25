@@ -47,18 +47,24 @@ public class XmlParser  implements ContentHandler {
 	 */
 	private Locator locator;
 	
+	/**
+	 * Documents de la collection
+	 */
+	private Hashtable<String, Document> m_docs ;
 	
 	/**
 	 * COnstructeur
 	 * @param v VectorIndex à utiliser
 	 * @param usedElement Liste des éléments déjà utilisés
+	 * @param docs Documents de la collection
 	 * @param stem Si il faut raciniser les mots.
 	 */
-	public XmlParser( VectorIndex v, Hashtable<String, DOMElement> usedElement, boolean stem ) {
+	public XmlParser( VectorIndex v, Hashtable<String, DOMElement> usedElement, Hashtable<String, Document> docs ,boolean stem ) {
 		super();
 		m_vectIndex = v ;
 		m_usedElement = usedElement ;
 		m_stem = stem ;
+		m_docs = docs ;
 		
 		m_DOMPos = new LinkedList<Tag>() ;
 		m_DOMPos.add( new Tag("article", 1) ) ;
@@ -101,7 +107,9 @@ public class XmlParser  implements ContentHandler {
 		
 		
 		
-		
+		// Gestion des liens
+		if( rawName == "link")
+			handlelinks( attributs ) ;
 		
 		// Création d'un nouveau tag
 		// Utiliser Tag.children pour bien choisir le Tag.num
@@ -187,6 +195,32 @@ public class XmlParser  implements ContentHandler {
 		
 		// Ajout des mots dans le vectorIndex
 		
+	}
+	
+	
+	
+	
+	/**
+	 * Gère l'apparition de lien dans la collection
+	 * @param attributs Attributs de la balise links
+	 */
+	private void handlelinks(  Attributes attributs ) {
+		
+		// on parcourt la liste des attributs
+		for (int i = 0; i < attributs.getLength(); i++) { 
+			
+			if( attributs.getLocalName(i).contains("href") ) {
+				
+				String name =  attributs.getValue(i) ;
+				int lastSlash = name.lastIndexOf("/") ;
+				if( lastSlash != -1 ) 
+					name =  attributs.getValue(i).substring( lastSlash +1);
+				if( m_docs.containsKey(name) ) {
+					m_docs.get( name ).addLinks() ;
+				}
+				break ;
+			}
+		}
 	}
 	
 	
