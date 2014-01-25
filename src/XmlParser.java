@@ -87,7 +87,6 @@ public class XmlParser  implements ContentHandler {
 	public void startElement(String nameSpaceURI, String localName, String rawName, Attributes attributs) throws SAXException {
 		
 		// Code d'exemple
-		System.out.println("Ouverture de la balise : " + localName);
 		System.out.println("Ouverture de la balise : " + rawName);
 		if ( ! "".equals(nameSpaceURI)) { // espace de nommage particulier
 			System.out.println("  appartenant a l'espace de nom : "  + nameSpaceURI);
