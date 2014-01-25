@@ -91,7 +91,7 @@ public class XmlParser  implements ContentHandler {
 	 * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	public void startElement(String nameSpaceURI, String localName, String rawName, Attributes attributs) throws SAXException {
-		
+		/*
 		// Code d'exemple
 		System.out.println("Ouverture de la balise : " + rawName);
 		if ( ! "".equals(nameSpaceURI)) { // espace de nommage particulier
@@ -104,7 +104,7 @@ public class XmlParser  implements ContentHandler {
 			System.out.println(" - " +  attributs.getLocalName(index) + " = " + attributs.getValue(index));
 		}
 		
-		
+		*/
 		
 		
 		// Gestion des liens
@@ -150,7 +150,7 @@ public class XmlParser  implements ContentHandler {
 	 * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public void endElement(String nameSpaceURI, String localName, String rawName) throws SAXException {
-		// Code d'exemple
+		/*/ Code d'exemple
 		System.out.print("Fermeture de la balise : " + localName);
 
 		if ( ! "".equals(nameSpaceURI)) { // name space non null
@@ -158,7 +158,7 @@ public class XmlParser  implements ContentHandler {
 		}
 
 		System.out.println();
-		
+		/*/
 		
 		// retrait du dernier tag dans m_DOMPos
 		
@@ -187,7 +187,7 @@ public class XmlParser  implements ContentHandler {
 	 */
 	public void characters(char[] ch, int start, int end) throws SAXException {
 		
-		System.out.println("#PCDATA <0 : " + new String(ch, start, end));
+		//System.out.println("#PCDATA <0 : " + new String(ch, start, end));
 		
 		// Conversion en String (voir exemple)
 		
@@ -206,19 +206,21 @@ public class XmlParser  implements ContentHandler {
 	 */
 	private void handlelinks(  Attributes attributs ) {
 		
-		// on parcourt la liste des attributs
-		for (int i = 0; i < attributs.getLength(); i++) { 
-			
-			if( attributs.getLocalName(i).contains("href") ) {
+		if( m_docs != null ) {
+			// on parcourt la liste des attributs
+			for (int i = 0; i < attributs.getLength(); i++) { 
 				
-				String name =  attributs.getValue(i) ;
-				int lastSlash = name.lastIndexOf("/") ;
-				if( lastSlash != -1 ) 
-					name =  attributs.getValue(i).substring( lastSlash +1);
-				if( m_docs.containsKey(name) ) {
-					m_docs.get( name ).addLinks() ;
+				if( attributs.getLocalName(i).contains("href") ) {
+					
+					String name =  attributs.getValue(i) ;
+					int lastSlash = name.lastIndexOf("/") ;
+					if( lastSlash != -1 ) 
+						name =  attributs.getValue(i).substring( lastSlash +1);
+					if( m_docs.containsKey(name) ) {
+						m_docs.get( name ).addLinks() ;
+					}
+					break ;
 				}
-				break ;
 			}
 		}
 	}

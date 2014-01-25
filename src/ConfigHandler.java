@@ -34,7 +34,8 @@ public class ConfigHandler {
 		{ "s", "saveIndex", "Enregistre l'index après sa constuction eventuelle."},
 		{ "x", "xml", "Fait la recherche en prenant compte des balises xml." },
 		{ "h", "help", "Affiche l'aide." },
-		{ "R", "racin", "Racinisation de l'index et de la recherche." }
+		{ "R", "racin", "Racinisation de l'index et de la recherche." },
+		{ "L", "links", "Suis les liens pour l'indexation et lles utilise lors de la pondération." }
 	};
 	
 	/**
@@ -53,6 +54,7 @@ public class ConfigHandler {
 		{ "t", "team", "Nom de l'équipe." },
 		{ "m", "method", "Methode de calcul des poids." },
 		{ "b", "keybonus", "Bonus à associer aux éléments de la requête commençant par un +." },
+		{ "M", "linksMethod", "Méthode de calcul des pondération à partir des liens." },
 		{ "K", "bm25k", "Paramètre k1 de bm25" },
 		{ "B", "bm25b", "Paramètre b de bm25" }
 	};
@@ -67,7 +69,8 @@ public class ConfigHandler {
 		{"indexFile", "data/index.bin"},
 		{"documents", "data/documents/coll" },
 		{"nbresult", "1500" },
-		{"keybonus", "2" }
+		{"keybonus", "2" },
+		{"linksMethod", "n" }
 	};
 	
 	

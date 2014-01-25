@@ -85,7 +85,7 @@ public class Index implements Serializable{
 	 * Si on doit prendre en compte les liens dans les documents
 	 * xml only
 	 */
-	private boolean m_usedLinks = true ;
+	private boolean m_usedLinks = false ;
 	
 	
 	/**
@@ -111,6 +111,9 @@ public class Index implements Serializable{
 		
 		if ( conf.containsKey("racin") && conf.get("racin") != "false" )
 			m_stem = true ;
+		
+		if ( conf.containsKey("links") && conf.get("links") != "false" )
+			m_usedLinks = true ;
 		
 		if ( conf.containsKey("indexFile") && !m_stem)
 			m_indexFilename =  conf.get("indexFile") ;
@@ -189,11 +192,12 @@ public class Index implements Serializable{
 		
 		Document newDoc ;
 		
-		if( m_docs.containsKey(file.getName())  )
+		if( m_usedLinks && m_xml && m_docs.containsKey(file.getName()) )
 			newDoc = m_docs.get(file.getName()) ;
 		else {
 			newDoc = new Document(m_docId, file) ;
 			m_docId ++ ;
+			if(  m_usedLinks && m_xml && m_docs != null )
 			m_docs.put( file.getName(), newDoc );
 		}
 		

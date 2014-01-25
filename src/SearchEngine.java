@@ -43,6 +43,11 @@ public class SearchEngine {
 	private boolean m_xml = false ;
 	
 	
+	private boolean m_links  = false ;
+	
+	private String m_linksMethod = "n" ;
+	
+	
 	/**
 	 * Paramètre de bm25
 	 * @var bm25k1
@@ -65,6 +70,13 @@ public class SearchEngine {
 		if( params.containsKey("nbresult") ) {
 			m_nbResultsMax =  Integer.parseInt(params.get("nbresult")) ;
 		}
+		
+		if ( params.containsKey("links") && params.get("links") != "false" )
+			m_links = true ;
+		
+		if( params.containsKey("linksMethod") )
+			m_linksMethod =  params.get("linksMethod") ;
+		
 		
 		if( params.containsKey("bm25k") ) {
 			m_bm25k1 =  Double.parseDouble(params.get("bm25k")) ;
@@ -156,6 +168,9 @@ public class SearchEngine {
 			// Liste des poids tels que ajouté
 			LinkedList< Double > WeightList = new LinkedList< Double>();
 			
+			// Docment courant
+			Document currentDoc  = null ;
+			
 			// Pour chaque mot clef
 			for ( int i=0; i< n; i++) {
 				
@@ -170,7 +185,8 @@ public class SearchEngine {
 				
 				// Si r = null, on l'inicialise
 				if( r == null ) {
-					r = new Result( currentOcc[i].getDocument().getPath() );
+					currentDoc = currentOcc[i].getDocument() ;
+					r = new Result( currentDoc.getPath() );
 					r.setWeight(0);
 					r.setWeightToConsider(true);
 				}
@@ -183,7 +199,7 @@ public class SearchEngine {
 				r.addWeight(w * keyW[i]);
 			}
 			
-			r.setWeight( normalizeWeight( r.getWeight(), WeightList ) );
+			r.setWeight( linksWeight( normalizeWeight( r.getWeight(), WeightList ), currentDoc ) );
 			
 			if( m_xml )
 				r.setTag( getMostRelevantTag(OccList) );
@@ -353,7 +369,28 @@ public class SearchEngine {
 	
 	
 	
-	
+	public double linksWeight( double oldw, Document d ) {
+		
+		if( m_links && d != null ) {
+			
+			double w = oldw ;
+			
+			switch( m_linksMethod ) {
+				
+				case "log" :
+					w = w* Math.log( 1+ d.getLinks() ) ;
+					break ;
+				
+				default : 
+				case "n" :
+					w = w * d.getLinks() ;
+					break ;	
+			}
+			
+			return w;
+		} else
+			return oldw ;
+	}
 	
 	
 	
