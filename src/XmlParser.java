@@ -10,19 +10,50 @@ import org.xml.sax.ContentHandler;
  * Classe parsant le xml pour l'indexation
  */
 public class XmlParser  implements ContentHandler {
-
+	
+	/**
+	 * Index 1 colonne du document que l'on parse
+	 * @var vectIndex
+	 */
 	private VectorIndex m_vectIndex ;
 
+	/**
+	 * Liste des balise pour arriver à là où on en est
+	 * Par exemple, si on en est à /article[1]/body[1]/section[2]/c[1]/b[1]
+	 * m_DOMPos = { {article, 1}, {body, 1}, {section, 2}, {c, 1}, {b,1} }
+	 */
 	private LinkedList<Tag> m_DOMPos ;
-
+	
+	/**
+	 * Liste des éléments déjà utilisé (dans ce fichier ou un autre)
+	 * Que l'on peut réetulisé
+	 */
 	private Hashtable<String, DOMElement> m_usedElement ;
 	
+	/**
+	 * Elément courant
+	 */
 	private DOMElement m_currentDOMElement = null;
 	
+	/**
+	 * Si on doit raciniser les mots
+	 */
 	private boolean m_stem = false ;
 
+	/**
+	 * Definition du locator qui permet a tout moment pendant l'analyse, de localiser
+	 * le traitement dans le flux. Le locator par defaut indique, par exemple, le numero
+	 * de ligne et le numero de caractere sur la ligne.
+	 */
 	private Locator locator;
-
+	
+	
+	/**
+	 * COnstructeur
+	 * @param v VectorIndex à utiliser
+	 * @param usedElement Liste des éléments déjà utilisés
+	 * @param stem Si il faut raciniser les mots.
+	 */
 	public XmlParser( VectorIndex v, Hashtable<String, DOMElement> usedElement, boolean stem ) {
 		super();
 		m_vectIndex = v ;
@@ -94,11 +125,11 @@ public class XmlParser  implements ContentHandler {
 		// Ex : Seul balise pertinente section
 		
 		// On en est à /article[1]/body[1]/section[2]/c[1]/b[1]
-		// m_POS = { {article, 1}, {body, 1}, {section, 2}, {c, 1}, {b,1} }
+		// m_DOMPos = { {article, 1}, {body, 1}, {section, 2}, {c, 1}, {b,1} }
 		// m_currentDOMElement = DOMElement( "/article[1]/body[1]/section[2]" )
 		
 		// On arrive ensuite à /article[1]/body[1]/section[2]/c[1]/b[1]/section[1]/foo[3]
-		// m_POS = { {article, 1}, {body, 1}, {section, 2}, {c, 1}, {b,1}, {section, 1}, {foo, 3} }
+		// m_DOMPos = { {article, 1}, {body, 1}, {section, 2}, {c, 1}, {b,1}, {section, 1}, {foo, 3} }
 		// m_currentDOMElement = DOMElement( "/article[1]/body[1]/section[2]/b[1]/section[1]" )
 		
 		
