@@ -90,7 +90,22 @@ public class FilesHandler {
 			}
 			if( config.containsKey("racin") && config.get("racin") != "false" )
 				params += "racin";
-			
+			if( config.containsKey("links") && config.get("links") != "false" )
+				params += "links";
+			if( config.containsKey("roberson") && config.get("roberson") != "false" && config.containsKey("robersonFile") ) {
+				
+				String rob = config.get("robersonFile") ;
+				int lastSlash = rob.lastIndexOf("/") ;
+				if( lastSlash != -1 ) 
+					rob =  rob.substring( lastSlash +1);
+				int lastPoint = rob.lastIndexOf(".") ;
+				if( lastPoint != -1 ) 
+					rob =  rob.substring( 0, lastPoint);
+				
+				
+				params += rob ;
+			}
+				
 			
 			if( params == "" )
 				params = "none" ;

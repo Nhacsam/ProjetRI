@@ -53,18 +53,24 @@ public class XmlParser  implements ContentHandler {
 	private Hashtable<String, Document> m_docs ;
 	
 	/**
+	 * Fichier contanant les poids de roberson
+	 */
+	String m_robersonFile = "";
+	
+	/**
 	 * COnstructeur
 	 * @param v VectorIndex à utiliser
 	 * @param usedElement Liste des éléments déjà utilisés
 	 * @param docs Documents de la collection
 	 * @param stem Si il faut raciniser les mots.
 	 */
-	public XmlParser( VectorIndex v, Hashtable<String, DOMElement> usedElement, Hashtable<String, Document> docs ,boolean stem ) {
+	public XmlParser( VectorIndex v, Hashtable<String, DOMElement> usedElement, Hashtable<String, Document> docs ,boolean stem, String RobersonFile ) {
 		super();
 		m_vectIndex = v ;
 		m_usedElement = usedElement ;
 		m_stem = stem ;
 		m_docs = docs ;
+		m_robersonFile = RobersonFile ;
 		
 		m_DOMPos = new LinkedList<Tag>() ;
 		m_DOMPos.add( new Tag("article", 1) ) ;

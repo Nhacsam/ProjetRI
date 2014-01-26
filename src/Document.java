@@ -55,6 +55,11 @@ public class Document implements Serializable {
 	private boolean m_stem = false;
 	
 	/**
+	 * Fichier conant les poids de roberson
+	 */
+	private String m_robfile = "" ;
+	
+	/**
 	 * Constructeur par défaut (à éviter)
 	 */
 	public Document(){}
@@ -140,7 +145,7 @@ public class Document implements Serializable {
 	public VectorIndex parseXmlFile (String path, Hashtable<String, DOMElement> usedElement, Hashtable<String, Document> docs) {
 		
 		VectorIndex index = new VectorIndex( this );
-		XmlParser parser = new XmlParser( index, usedElement, docs , m_stem ) ;
+		XmlParser parser = new XmlParser( index, usedElement, docs , m_stem, m_robfile ) ;
 		
 		
 		try {
@@ -165,6 +170,13 @@ public class Document implements Serializable {
 	 */
 	public void setStem( boolean stem ) {
 		m_stem = stem ;
+	}
+	
+	/**
+	 * Set roberson file
+	 */
+	public void setRob( String robFile ) {
+		m_robfile = robFile ;
 	}
 	
 	/**

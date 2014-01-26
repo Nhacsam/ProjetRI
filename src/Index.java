@@ -89,6 +89,11 @@ public class Index implements Serializable{
 	
 	
 	/**
+	 * FIchier de config de roberson
+	 */
+	private String m_rob = "" ;
+	
+	/**
 	 *  Constructeur
 	 */
 	public Index(){
@@ -115,10 +120,12 @@ public class Index implements Serializable{
 		if ( conf.containsKey("links") && conf.get("links") != "false" )
 			m_usedLinks = true ;
 		
-		if ( conf.containsKey("indexFile") && !m_stem)
+		if ( conf.containsKey("roberson") && conf.get("roberson") != "roberson" && conf.containsKey("robersonFile") )
+			m_rob = conf.get("robersonFile") ;
+		
+		
+		if ( conf.containsKey("indexFile") )
 			m_indexFilename =  conf.get("indexFile") ;
-		else if ( conf.containsKey("indexFileRac") && m_stem)
-			m_indexFilename =  conf.get("indexFileRac") ;
 		
 		String documentFolder = ( conf.containsKey("documents") ) ? conf.get("documents") : "data/documents/coll" ;
 		
@@ -206,6 +213,7 @@ public class Index implements Serializable{
 			System.out.print('.');
 		
 		newDoc.setStem(m_stem);
+		newDoc.setRob(m_rob);
 		
 		VectorIndex documentIndex ;
 		if( !m_xml)

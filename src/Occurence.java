@@ -53,6 +53,19 @@ public class Occurence implements Serializable {
 	}
 	
 	/**
+	 * Constructeur 
+	 * @param document Document qui contient l'occurence du mot
+	 * @param tag Balise dans laquelle est contenue le premier mot
+	 */
+	public Occurence (Document document, DOMElement tag, int RobersonV ) {
+		m_document = document ;
+		m_tf = RobersonV ;
+		
+		m_tag = new LinkedList<DOMElement>() ;
+		m_tag.add(tag) ;
+	}
+	
+	/**
 	 *  Indique qu'on a trouvé une occurence de plus
 	 * @param tag Balise dans laquelle est contenue le mot
 	 */
@@ -66,6 +79,15 @@ public class Occurence implements Serializable {
 	 */
 	public void addOccurence( DOMElement tag) {
 		m_tf++ ;
+		m_tag.add(tag) ;
+	}
+	
+	/**
+	 *  Indique qu'on a trouvé une occurence de plus
+	 *  Permet de spécifier un poid de pour roberson
+	 */
+	public void addOccurence( DOMElement tag, int RobersonV) {
+		m_tf += RobersonV ;
 		m_tag.add(tag) ;
 	}
 	
