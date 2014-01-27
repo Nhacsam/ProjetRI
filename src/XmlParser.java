@@ -1,9 +1,13 @@
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
-import org.xml.sax.*;
-import org.xml.sax.helpers.LocatorImpl;
+import java.util.ListIterator;
 
+import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.LocatorImpl;
 
 
 /**
@@ -57,6 +61,21 @@ public class XmlParser  implements ContentHandler {
 	 */
 	String m_robersonFile = "";
 	
+	
+	/**
+	 * Profondeur max de parcours
+	 */
+	private int m_maxdepth = 4 ;
+	
+	/**
+	 * Liste des balises interressante (pas de fichier .ini >< )
+	 */
+	private static final String[] relevantTags = { "article", "bdy",
+		"p", "ss1", "ss2", "table", "list", "sec", "header", "title"
+	};
+	
+	
+	
 	/**
 	 * COnstructeur
 	 * @param v VectorIndex à utiliser
@@ -64,24 +83,17 @@ public class XmlParser  implements ContentHandler {
 	 * @param docs Documents de la collection
 	 * @param stem Si il faut raciniser les mots.
 	 */
-	public XmlParser( VectorIndex v, Hashtable<String, DOMElement> usedElement, Hashtable<String, Document> docs ,boolean stem, String RobersonFile ) {
+	public XmlParser( VectorIndex v, Hashtable<String, DOMElement> usedElement, Hashtable<String, Document> docs ,boolean stem, String RobersonFile, int maxdepth ) {
 		super();
 		m_vectIndex = v ;
 		m_usedElement = usedElement ;
 		m_stem = stem ;
 		m_docs = docs ;
 		m_robersonFile = RobersonFile ;
+		m_maxdepth = maxdepth ;
 		
 		m_DOMPos = new LinkedList<Tag>() ;
-		m_DOMPos.add( new Tag("article", 1) ) ;
-		
-		// Vérification de l'existance de /article[1] dans la hashtable et création ou récupération
-		if( m_usedElement.contains("/article[1]") )
-			m_currentDOMElement = m_usedElement.get("/article[1]") ;
-		else {
-			m_currentDOMElement = new DOMElement("/article[1]");
-			m_usedElement.put("/article[1]", m_currentDOMElement) ;
-		}
+		m_currentDOMElement = null ;
 		
 		locator = new LocatorImpl();
 	}
@@ -97,20 +109,10 @@ public class XmlParser  implements ContentHandler {
 	 * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	public void startElement(String nameSpaceURI, String localName, String rawName, Attributes attributs) throws SAXException {
-		/*
-		// Code d'exemple
-		System.out.println("Ouverture de la balise : " + rawName);
-		if ( ! "".equals(nameSpaceURI)) { // espace de nommage particulier
-			System.out.println("  appartenant a l'espace de nom : "  + nameSpaceURI);
-		}
 
-		System.out.println("  Attributs de la balise : ");
-
-		for (int index = 0; index < attributs.getLength(); index++) { // on parcourt la liste des attributs
-			System.out.println(" - " +  attributs.getLocalName(index) + " = " + attributs.getValue(index));
-		}
-		
-		*/
+		// on ignore le contenu de la balise <math> (c'est du LaTeX)
+		if( !m_DOMPos.isEmpty() && m_DOMPos.getLast().name == "math")
+			return;
 		
 		
 		// Gestion des liens
@@ -119,23 +121,31 @@ public class XmlParser  implements ContentHandler {
 		
 		// Création d'un nouveau tag
 		// Utiliser Tag.children pour bien choisir le Tag.num
+		int num = 1 ;
+		if( !m_DOMPos.isEmpty() )
+			num = m_DOMPos.getLast().searchInChildren(rawName) +1 ;
+		
+		Tag tag = new Tag(rawName, num) ;
 		
 		// ajout du nouveau tag dans m_DOMPos et dans le Tag.childre du précédent
+		if( !m_DOMPos.isEmpty() )
+			m_DOMPos.getLast().children.add(tag) ;
+		m_DOMPos.addLast(tag);
 		
 		
+		// Si la balise ne fait pas parti des balise pertinente, On ne met pas à jour m_currentDOMElement (on garde l'ancienne)
+		if( Arrays.asList(relevantTags).contains(rawName) && m_DOMPos.size() < m_maxdepth ) {
 		
-		// Recherche dans la hashtable si l'arboréscence à déjà été rencontré
-		
-			// Si c'est le cas récup dans m_currentDOMElement
-		
-			// SInon création et ajout dans la hashtable
-		// voir le constructeur. On peut sauter cette etape si la balise n'est pas pertinente (voir plus bas)
-		
-		// AU pasage, je pense que tu peux ignorer le contenu de la balise <math> (c'est du LaTeX)
-		
-		// Pour ne retenir que les balises pertinentes
-		// tu peux t'arreter à la dernière balise pertinente quand tu cherche dans la hashtable
-		// Tu dois par contre tout garder dans m_DOMPos
+			// Recherche dans la hashtable si l'arboréscence à déjà été rencontré
+			String tagpath = DOMElement.tags2path( m_DOMPos ) ;
+			
+			if( m_usedElement.contains(tagpath) )	 // Si c'est le cas récup dans m_currentDOMElement
+				m_currentDOMElement = m_usedElement.get(tagpath) ;
+			else { 									// SInon création et ajout dans la hashtable
+				m_currentDOMElement = new DOMElement(tagpath);
+				m_usedElement.put(tagpath, m_currentDOMElement) ;
+			}	
+		}
 		
 		// Ex : Seul balise pertinente section
 		
@@ -156,27 +166,43 @@ public class XmlParser  implements ContentHandler {
 	 * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public void endElement(String nameSpaceURI, String localName, String rawName) throws SAXException {
-		/*/ Code d'exemple
-		System.out.print("Fermeture de la balise : " + localName);
-
-		if ( ! "".equals(nameSpaceURI)) { // name space non null
-			System.out.print("appartenant a l'espace de nommage : " + localName);
-		}
-
-		System.out.println();
-		/*/
+		// on ignore le contenu de la balise <math> (c'est du LaTeX)
+		if( m_DOMPos.getLast().name == "math" && rawName != "math" )
+			return;
 		
 		// retrait du dernier tag dans m_DOMPos
+		Tag tag = m_DOMPos.getLast() ;
+		m_DOMPos.removeLast() ;
+		tag = null ;
 		
+		// Si la balise qui se ferme n'était pas pertinente, on garde m_currentDOMElement
+		if (Arrays.asList(relevantTags).contains( rawName ) && m_DOMPos.size() < m_maxdepth ) {
 		
-		
-		// Recherche dans la hashtable si l'arboréscence à déjà été rencontré (normallement oui, à l'ouverture)
-		
-			// Si c'est le cas récup dans m_currentDOMElement
-		
-			// SInon création et ajout dans la hashtable
-		// voir le constructeur. On peut sauter cette etape si la balise qui se ferme n'était pas pertinente
+			// récupération de l'indice de la dernière balise pertinente
+			ListIterator<Tag> ite = m_DOMPos.listIterator(m_DOMPos.size()) ;
+			int i = 0 ;
+			boolean foundRelevant = false ;
+			while( ite.hasPrevious() ) {
+				Tag t = ite.previous() ;
 				
+				if( foundRelevant )
+					i++ ;
+				else if( Arrays.asList(relevantTags).contains( t.name ) )
+					foundRelevant = true ;
+			}
+			
+			
+			String tagpath = DOMElement.tags2path( m_DOMPos, i ) ;
+			
+			// Recherche dans la hashtable si l'arboréscence à déjà été rencontré (normallement oui, à l'ouverture)
+			if( m_usedElement.contains(tagpath) )	 // Si c'est le cas récup dans m_currentDOMElement
+				m_currentDOMElement = m_usedElement.get(tagpath) ;
+			else { 									// SInon création et ajout dans la hashtable
+				m_currentDOMElement = new DOMElement(tagpath);
+				m_usedElement.put(tagpath, m_currentDOMElement) ;
+			}	
+		}
+		
 	}
 	
 	
@@ -194,13 +220,22 @@ public class XmlParser  implements ContentHandler {
 	public void characters(char[] ch, int start, int end) throws SAXException {
 		
 		//System.out.println("#PCDATA <0 : " + new String(ch, start, end));
+		if( m_DOMPos.getLast().name == "math")
+			return;
 		
-		// Conversion en String (voir exemple)
+		
+		// Conversion en String
+		String content = new String(ch, start, end) ;
 		
 		// Séparation en mot (Attention aux \n \t \r ... )
+		String[] words = content.split("(\\p{Blank}|\\p{Punct})+");
 		
-		// Ajout des mots dans le vectorIndex
+		// Ajout de la taille (pour le calcul de df)
+		m_vectIndex.getDocument().addLength(  words.length ) ;
 		
+		// Ajout des mots dans l'index
+		for( int i=0; i < words.length; i++)
+			m_vectIndex.addRobersonWord(words[i], m_currentDOMElement, m_stem, m_DOMPos.getLast() ) ;
 	}
 	
 	

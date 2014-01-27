@@ -60,6 +60,11 @@ public class Document implements Serializable {
 	private String m_robfile = "" ;
 	
 	/**
+	 * Profondeur max
+	 */
+	private int m_maxdepth ;
+	
+	/**
 	 * Constructeur par défaut (à éviter)
 	 */
 	public Document(){}
@@ -145,7 +150,7 @@ public class Document implements Serializable {
 	public VectorIndex parseXmlFile (String path, Hashtable<String, DOMElement> usedElement, Hashtable<String, Document> docs) {
 		
 		VectorIndex index = new VectorIndex( this );
-		XmlParser parser = new XmlParser( index, usedElement, docs , m_stem, m_robfile ) ;
+		XmlParser parser = new XmlParser( index, usedElement, docs , m_stem, m_robfile, m_maxdepth ) ;
 		
 		
 		try {
@@ -206,12 +211,25 @@ public class Document implements Serializable {
 	public String getPath() {
 		return m_path;
 	}
-
+	
+	/**
+	 * @param length Valeur à ajouté à la longeur du doc
+	 */
+	public void addLength( int length ) {
+		m_length += length;
+	}
+	
+	
 	/**
 	 * @return the m_length
 	 */
 	public int getLength() {
 		return m_length;
+	}
+	
+	
+	public void setMaxdepth(int d) {
+		m_maxdepth = d ;
 	}
 	
 	/**

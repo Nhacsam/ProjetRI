@@ -57,6 +57,7 @@ public class ConfigHandler {
 		{ "V", "robersonFile", "Fichier contenant les informations des poids de roberson." },
 		{ "K", "bm25k", "Paramètre k1 de bm25" },
 		{ "B", "bm25b", "Paramètre b de bm25" },
+		{ "D", "maxdepth", "Profondeur maximum de parcours des fichiers" },
 		
 		{ "i", "indexFile", "Fichier où charger ou enregistrer l'index." },
 		{ "ic", "indexFileRac", "Fichier où charger ou enregistrer l'index racinisé (défaut = indexFile)." },

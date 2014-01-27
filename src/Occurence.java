@@ -121,6 +121,14 @@ public class Occurence implements Serializable {
 	public void setTf(int m_tf) {
 		this.m_tf = m_tf;
 	}
+	
+	/**
+	 * @return tags
+	 */
+	public LinkedList<DOMElement> getTags() {
+		return m_tag ;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

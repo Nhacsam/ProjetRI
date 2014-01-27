@@ -109,6 +109,9 @@ public class VectorIndex {
 	 */
 	public void addRobersonWord( String w, DOMElement d, boolean stem, Tag t ){
 		
+		if( w.matches("^(.+)?\\d(.+)?$") )
+			return ;
+		
 		w = w.toLowerCase();
 		if( stem )
 			w = SearchEngine.racinisation( w ) ;

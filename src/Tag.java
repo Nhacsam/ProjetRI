@@ -51,6 +51,7 @@ public class Tag {
 			Tag t = ite.next() ;
 			if( t.name == sname && t.num > snum )
 				snum = t.num ;
+			t = null ;
 		}
 		
 		return snum ;

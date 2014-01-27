@@ -229,10 +229,61 @@ public class SearchEngine {
 	 */
 	private String getMostRelevantTag( LinkedList<Occurence> occs ) {
 		
+		// Liste de toutes les balises utiles
+		LinkedList<String> tags = new LinkedList<String>() ;
 		
-		// TODO
+		int minlength = 0 ;
 		
-		return "/article[1]" ;
+		ListIterator<Occurence> ite1 = occs.listIterator() ;
+		while( ite1.hasNext() ) {
+			ListIterator<DOMElement> ite2 = ite1.next().getTags().listIterator();
+			while( ite2.hasNext() ) {
+				DOMElement d = ite2.next() ;
+				if (d != null) {
+					String p = d.getDOMpath() ;
+					tags.add(p) ;
+					
+					if( minlength == 0 || p.length() < minlength )
+						minlength = p.length() ;
+				}
+			}
+		}
+		
+		ListIterator<String> ite ;
+		String s ;
+		String out = "" ;
+		boolean stop = false ;
+		
+		// Comparaison lettre par lettre
+		for( int i = 0; i < minlength; i++ ) {
+			ite = tags.listIterator() ;
+			char c = '\n' ;
+			while( ite.hasNext() ) {
+				s = ite.next() ;
+				if( c == '\n' )
+					c = s.charAt(i) ;
+				else if (c != s.charAt(i) ) {
+					stop = true ;
+					break ;
+				}	
+			}
+			if( stop )
+				break ;
+			out += c ;
+		}
+		
+		if( out == "" ) {
+			out = "/article[1]" ;
+		}
+		
+		if( out.charAt(out.length() -1 ) != ']' )
+			out = out.substring(0, out.lastIndexOf("/") ) ;
+		
+		if( out == "" ) {
+			out = "/article[1]" ;
+		}
+		
+		return out ;
 	}
 	
 	

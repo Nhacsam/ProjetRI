@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -6,7 +7,7 @@ import java.util.ListIterator;
  * Représente un élément du DOM (avec tout le chemin) dan sun fichier xml
  * @author nikkidbz
  */
-public class DOMElement {
+public class DOMElement  implements Serializable {
 	
 	/**
 	 * Chemin complet de la balise
@@ -31,15 +32,28 @@ public class DOMElement {
 	 * @param tags
 	 */
 	public DOMElement ( LinkedList<Tag> tags) {
-		
+		m_DOMpath = tags2path( tags ); 
+	}
+	
+	static String tags2path ( LinkedList<Tag> tags, int nb ) {
 		ListIterator<Tag> ite = tags.listIterator(0);
+		int i = 0 ;
 		
-		m_DOMpath = "" ;
+		String DOMpath = "" ;
 		while( ite.hasNext() ) {
 			Tag t = ite.next() ;
-			m_DOMpath += "/" + t.name + "[" + t.num + "]";
+			DOMpath += "/" + t.name + "[" + t.num + "]";
+			
+			if( nb == i )
+				break ;
 		}
+		return DOMpath ;
 	}
+	
+	static String tags2path ( LinkedList<Tag> tags ) {
+		return tags2path( tags, -1 ) ;
+	}
+	
 
 	/**
 	 * @return the m_DOMpath

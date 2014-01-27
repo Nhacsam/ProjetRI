@@ -94,6 +94,11 @@ public class Index implements Serializable{
 	private String m_rob = "" ;
 	
 	/**
+	 * Profondeur max de parcours des fichier xml
+	 */
+	private int m_maxdepth = 50 ;
+	
+	/**
 	 *  Constructeur
 	 */
 	public Index(){
@@ -109,7 +114,9 @@ public class Index implements Serializable{
 			m_xml = true ;
 			m_tagsUsed = new Hashtable<String, DOMElement>() ;
 		}
-			
+		
+		if ( conf.containsKey("maxdepth") )
+			m_maxdepth = Integer.parseInt(conf.get("maxdepth")) ;
 		
 		if ( conf.containsKey("saveIndex") && conf.get("saveIndex") != "false" )
 			m_toSave = true ;
@@ -187,6 +194,8 @@ public class Index implements Serializable{
 				else
 					addDocumentToIndex(  files[i] );
 			}
+			m_docs = null ;
+			m_tagsUsed = null ;
 		}
 	}
 	
@@ -209,11 +218,12 @@ public class Index implements Serializable{
 		}
 		
 		
-		if( newDoc.getId() %100 == 0)
+		if( newDoc.getId() %100 == 0) {
 			System.out.print('.');
-		
+		}
 		newDoc.setStem(m_stem);
 		newDoc.setRob(m_rob);
+		newDoc.setMaxdepth(m_maxdepth);
 		
 		VectorIndex documentIndex ;
 		if( !m_xml)
